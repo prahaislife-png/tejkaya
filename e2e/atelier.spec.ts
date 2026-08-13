@@ -114,10 +114,21 @@ test("consult booking and clinic letterhead desk", async ({ page }) => {
   await page.locator("#em").fill(`consult.${Date.now()}@example.com`);
   await page.locator("#reason").selectOption("piles");
 
+  await page.goto("/clinic.html");
   await page.evaluate(() => {
     return new Promise<void>((resolve, reject) => {
       const req = indexedDB.open("tej-kaya", 2);
-      req.onerror = () => reject(req.error);
+      req.onerror = () => reject(req.error ?? new Error("idb open failed"));
+      req.onblocked = () => reject(new Error("idb blocked"));
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains("bookings")) {
+          db.createObjectStore("bookings", { keyPath: "id" });
+        }
+        if (!db.objectStoreNames.contains("prescriptions")) {
+          db.createObjectStore("prescriptions", { keyPath: "bookingId" });
+        }
+      };
       req.onsuccess = () => {
         const db = req.result;
         const tx = db.transaction("bookings", "readwrite");
@@ -125,7 +136,7 @@ test("consult booking and clinic letterhead desk", async ({ page }) => {
           db.close();
           resolve();
         };
-        tx.onerror = () => reject(tx.error);
+        tx.onerror = () => reject(tx.error ?? new Error("idb put failed"));
         tx.objectStore("bookings").put({
           id: "bkg-e2e",
           createdAt: new Date().toISOString(),
@@ -149,7 +160,6 @@ test("consult booking and clinic letterhead desk", async ({ page }) => {
     });
   });
 
-  await page.goto("/clinic.html");
   await page.locator("#pin").fill("urocare");
   await page.getByRole("button", { name: "Enter" }).click();
   await expect(page.getByRole("heading", { name: "Today’s book." })).toBeVisible();
