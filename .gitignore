@@ -1,0 +1,4 @@
+.DS_Store
+.herenow/
+*.log
+node_modules/
