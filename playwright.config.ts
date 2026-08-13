@@ -5,13 +5,13 @@ export default defineConfig({
   fullyParallel: false,
   retries: 0,
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: "http://127.0.0.1:4177",
     viewport: { width: 1440, height: 900 }
   },
   webServer: {
-    command: "npm run preview -- --port 4173 --host 127.0.0.1",
-    url: "http://127.0.0.1:4173",
-    reuseExistingServer: true,
+    command: "npm run preview -- --port 4177 --host 127.0.0.1",
+    url: "http://127.0.0.1:4177",
+    reuseExistingServer: false,
     timeout: 120000
   }
 });

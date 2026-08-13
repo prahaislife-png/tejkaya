@@ -25,8 +25,8 @@ test("account hub after registration", async ({ page }) => {
   await register(page, "hub");
   await expect(page.getByRole("link", { name: "My Ritual" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Private Journal" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "21 Days" })).toBeVisible();
-  await expect(page.getByText("Chyawanprash")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Included 21 Days A self-paced" })).toBeVisible();
+  await expect(page.getByText("Chyawanprash").first()).toBeVisible();
 });
 
 test("ritual finder completes and reveals result", async ({ page }) => {
@@ -41,8 +41,8 @@ test("ritual finder completes and reveals result", async ({ page }) => {
   await page.locator("#em").fill(`finder.${Date.now()}@example.com`);
   await page.getByRole("button", { name: "Reveal my ritual" }).click();
   await expect(page.locator("h1")).toContainText("composed next step");
-  await expect(page.getByText("Rhythm")).toBeVisible();
-  await expect(page.getByText("Hydration")).toBeVisible();
+  await expect(page.getByText("Rhythm", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Hydration", { exact: true }).first()).toBeVisible();
   const [download] = await Promise.all([
     page.waitForEvent("download"),
     page.getByRole("button", { name: "Download" }).click()

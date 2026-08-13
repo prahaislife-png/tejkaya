@@ -220,11 +220,14 @@ export function mountFinder(root: HTMLElement): void {
     root.append(wrap);
   }
 
-  void currentUser().then((user) => {
-    if (user) {
-      gate.firstName = user.firstName;
-      gate.email = user.email;
-    }
-    paint();
-  });
+  paint();
+  void currentUser()
+    .then((user) => {
+      if (user) {
+        gate.firstName = user.firstName;
+        gate.email = user.email;
+        paint();
+      }
+    })
+    .catch(() => undefined);
 }

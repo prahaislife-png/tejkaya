@@ -9,10 +9,6 @@ function nextUrl(): string {
 }
 
 export async function mountSignIn(root: HTMLElement): Promise<void> {
-  if (await currentUser()) {
-    location.href = nextUrl();
-    return;
-  }
   let mode: "in" | "up" = "in";
   let error = "";
 
@@ -73,4 +69,7 @@ export async function mountSignIn(root: HTMLElement): Promise<void> {
     root.append(wrap);
   }
   paint();
+  void currentUser().then((user) => {
+    if (user) location.href = nextUrl();
+  });
 }
