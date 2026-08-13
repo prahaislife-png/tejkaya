@@ -1,13 +1,14 @@
 export const CLINIC = {
   name: "Shree Urocare",
   doctor: "Dr Rajeshree Amilkanthwar Bompilwar",
-  credentials: "BAMS · MS (General Surgery)",
+  credentials: "BAMS (Ayurveda) · MS (General Surgery)",
   role: "Consultant proctologist, urologist & Ayurvedic physician",
   hindi: "मूत्रविकार, गुदविकार, मुळव्याध, भगंदर तज्ञ",
   city: "Chinchwad Gaon, Pune",
   address:
     "Saykar Sadan, Bhoi Ali, Chapekar Chowk Flyover, near New English School, Chinchwad Gaon, Pune, Maharashtra 411033",
-  hours: "Mon–Sat, 10:00–20:00",
+  hours: "Mon–Sat, 11:00–20:00",
+  hoursNote: "Sunday closed",
   phoneDisplay: "+91 87883 29648",
   whatsapp: "918788329648",
   email: "drrajeshree@shreeurocare.in",
@@ -65,12 +66,47 @@ export const CONSULT_SKUS: ConsultSku[] = [
 ];
 
 export const VISIT_REASONS = [
-  { id: "piles", label: "Piles / fissure / fistula (anorectal)" },
-  { id: "prostate", label: "Prostate / male urinary comfort" },
-  { id: "urinary", label: "Urinary habits / burning / frequency" },
+  { id: "piles", label: "Piles / fissure / fistula / pilonidal sinus" },
+  { id: "urinary", label: "UTI / urinary habits / burning / frequency" },
+  { id: "kidney", label: "Kidney care" },
+  { id: "prostate", label: "Prostate / male health" },
+  { id: "female", label: "Female wellness / PCOS / ovarian cysts" },
+  { id: "fertility", label: "Fertility / garbhasanskar / ANC / post-delivery" },
+  { id: "suvarna", label: "Suvarnaprashan sanskar (children)" },
+  { id: "agnikarma", label: "Agnikarma — mole / चामखीर" },
   { id: "general", label: "General Ayurvedic consult" },
   { id: "other", label: "Something else (tell us in notes)" }
 ] as const;
+
+/** Services listed on shreeurocare.in — shown as clinic offerings, not Tej Kaya product claims. */
+export const CLINIC_SERVICES: Array<{ group: string; items: string[] }> = [
+  {
+    group: "Anorectal",
+    items: ["Piles", "Fissure", "Fistula", "Pilonidal sinus"]
+  },
+  {
+    group: "Urinary & kidney",
+    items: ["UTI care", "Kidney care", "Uttarbasti"]
+  },
+  {
+    group: "Male health",
+    items: ["Prostate", "Male wellness", "Fertility"]
+  },
+  {
+    group: "Women & children",
+    items: [
+      "Female wellness",
+      "PCOS / ovarian cysts",
+      "Garbhasanskar",
+      "ANC / post-delivery care",
+      "Suvarnaprashan sanskar"
+    ]
+  },
+  {
+    group: "Clinic procedures",
+    items: ["Agnikarma (mole / चामखीर)", "Kansya thali foot massage"]
+  }
+];
 
 export function formatInr(n: number): string {
   return `₹${n.toLocaleString("en-IN")}`;

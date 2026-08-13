@@ -16,11 +16,11 @@ function atHours(day: Date, h: number, m: number): Date {
   return new Date(day.getFullYear(), day.getMonth(), day.getDate(), h, m, 0, 0);
 }
 
-/** Mon–Sat, 10:00–20:00 IST-style local clock, 30-minute visits, last start 19:30. */
+/** Mon–Sat, 11:00–20:00 IST-style local clock, 30-minute visits, last start 19:30. */
 export function slotsForDay(day: Date, _mode: VisitMode): Slot[] {
   if (day.getDay() === 0) return [];
   const out: Slot[] = [];
-  for (let h = 10; h <= 19; h++) {
+  for (let h = 11; h <= 19; h++) {
     for (const m of [0, 30]) {
       if (h === 19 && m === 30) continue;
       const start = atHours(day, h, m);

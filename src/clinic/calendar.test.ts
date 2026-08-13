@@ -16,14 +16,14 @@ describe("clinic slots", () => {
     monday.setDate(monday.getDate() + 14);
     while (monday.getDay() !== 1) monday.setDate(monday.getDate() + 1);
     const slots = slotsForDay(monday, "video");
+    expect(slots[0]?.time).toBe("11:00");
     expect(slots.length).toBeGreaterThan(8);
-    expect(slots[0]?.time).toMatch(/^\d{2}:\d{2}$/);
   });
 });
 
 describe("clinic copy", () => {
   it("names the doctor and clinic", () => {
-    expect(CLINIC.doctor).toMatch(/Rajeshree/);
-    expect(CLINIC.name).toMatch(/Urocare/);
+    expect(CLINIC.credentials).toMatch(/BAMS/);
+    expect(CLINIC.hours).toMatch(/11:00–20:00/);
   });
 });

@@ -385,6 +385,16 @@
   border-top: 1px solid var(--line);
 }
 
+.consult-svc {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 0.55rem;
+}
+
+.consult-svc .eyebrow {
+  margin-bottom: 0.15rem;
+}
+
 .consult-desk {
   background: var(--cream);
   border: 1px solid var(--line);

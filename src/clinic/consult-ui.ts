@@ -11,6 +11,7 @@ import {
 import {
   CLINIC,
   CLINIC_MEDICAL_NOTE,
+  CLINIC_SERVICES,
   CONSULT_SKUS,
   VISIT_REASONS,
   formatInr,
@@ -79,11 +80,27 @@ function leftRail(sku: ConsultSku): HTMLElement {
   ]);
 }
 
+function servicesCard(): HTMLElement {
+  const list = el("div", { class: "consult-svc" });
+  for (const group of CLINIC_SERVICES) {
+    const block = el("div");
+    block.append(el("p", { class: "eyebrow" }, [group.group]));
+    block.append(el("p", { class: "micro" }, [group.items.join(" · ")]));
+    list.append(block);
+  }
+  return card("From shreeurocare.in", "Clinic services", [
+    list,
+    el("p", { class: "micro" }, [
+      "Ask for these in notes. The doctor examines and advises in her name — Tej Kaya does not sell these as product claims."
+    ])
+  ]);
+}
+
 function rightRail(sku: ConsultSku): HTMLElement {
   const tel = `tel:+${CLINIC.whatsapp}`;
   const wa = whatsappHref(`Namaste, I would like to book ${sku.title} with ${CLINIC.doctor}.`);
   return card("Clinic", CLINIC.name, [
-    el("p", { class: "micro" }, [CLINIC.hours, " IST"]),
+    el("p", { class: "micro" }, [CLINIC.hours, " IST · ", CLINIC.hoursNote]),
     el("p", {}, [CLINIC.address]),
       el("div", { class: "consult-links" }, [
         el("a", { class: "text-link", href: CLINIC.maps, target: "_blank", rel: "noopener" }, ["Map"]),
@@ -166,7 +183,8 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     const copy = el("div");
     copy.append(
       el("p", { class: "eyebrow" }, ["Shree Urocare · Chinchwad, Pune"]),
-      el("h1", {}, ["Consult with Dr Rajeshree."])
+      el("h1", {}, ["Consult with Dr Rajeshree."]),
+      el("p", { class: "micro" }, [CLINIC.credentials])
     );
     const meta = el("div", { class: "consult-mast-meta" });
     meta.append(
@@ -185,7 +203,7 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
 
     const board = el("div", { class: "consult-board" });
     const leftCol = el("div", { class: "consult-rail" });
-    leftCol.append(leftRail(sku));
+    leftCol.append(leftRail(sku), servicesCard());
     board.append(leftCol);
 
     const main = el("div", { class: "consult-main" });

@@ -8,11 +8,11 @@ Checked against the clinic site (shreeurocare.in) and `src/clinic/config.ts`.
 | --- | --- |
 | Clinic | Shree Urocare |
 | Doctor | Dr Rajeshree Amilkanthwar Bompilwar |
-| Letters | BAMS · MS (General Surgery) |
+| Letters | BAMS (Ayurveda) · MS (General Surgery) |
 | Role | Consultant proctologist, urologist & Ayurvedic physician |
 | Marathi line (her site) | मूत्रविकार, गुदविकार, मुळव्याध, भगंदर तज्ञ |
 | Address | Saykar Sadan, Bhoi Ali, Chapekar Chowk Flyover, near New English School, Chinchwad Gaon, Pune, Maharashtra 411033 |
-| Hours | Mon–Sat, 10:00–20:00 (Sunday closed) |
+| Hours | Mon–Sat, 11:00–20:00 (Sunday closed) |
 | Phone / WhatsApp | +91 87883 29648 |
 | Site | https://www.shreeurocare.in/ |
 | In-clinic fee | ₹700 · 30 minutes · one visit |
@@ -74,7 +74,7 @@ Landing for paid ads: consult page or WhatsApp **8788329648**. Identity on the a
 Shree Urocare, Chinchwad Gaon.
 Dr Rajeshree Amilkanthwar Bompilwar — BAMS, MS (General Surgery).
 In-clinic consult ₹700. 30 minutes. One visit.
-Mon–Sat, 10:00–20:00. Near New English School.
+Mon–Sat, 11:00–20:00. Near New English School.
 WhatsApp +91 87883 29648
 A doctor visit. Not a product sale.
 
