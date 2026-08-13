@@ -23,6 +23,15 @@ Traditional formulations, presented with the refinement of luxury: five launch v
 
 Copy is written as **pre-launch / formulation-pending**. Do not add disease-treatment claims without regulatory review.
 
+## Design system (free)
+
+No paid Figma file is required. The house identity lives in the repo:
+
+- Type: [Google Fonts](https://fonts.google.com/) — Cormorant Garamond, Outfit, Noto Serif Devanagari (SIL Open Font License), self-hosted in `assets/fonts/`
+- Mark: `assets/mark.svg`
+- Product labels: HTML overlays (`.pack-label`) positioned in `js/products.js` — photographs stay unbranded
+- Rules for later edits: `.cursor/skills/tej-kaya/SKILL.md`
+
 ## Local preview
 
 Serve the folder over HTTP (opening `file://` can block fonts in some browsers):

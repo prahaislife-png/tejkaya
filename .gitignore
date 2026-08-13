@@ -2,3 +2,5 @@
 .herenow/
 .playwright-mcp/
 *-blank.jpg
+qa-*.png
+tej-*.png

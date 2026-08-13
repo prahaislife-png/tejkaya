@@ -172,7 +172,7 @@
           }
         });
       },
-      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px 15% 0px" }
     );
     nodes.forEach(function (n) {
       io.observe(n);
@@ -200,12 +200,42 @@
     return rootPrefix() + "product.html?slug=" + slug;
   }
 
-  function cardHtml(product, i) {
-    var delay = (i % 5) * 80;
+  function packLabelHtml(product) {
+    var fit = product.label || { top: "42%", left: "50%", width: "26%", height: "28%", shape: "rect" };
+    var shape = fit.shape === "oval" ? " is-oval" : "";
     return (
-      '<a class="product-card reveal" style="transition-delay:' +
-      delay +
-      'ms" href="' +
+      '<div class="pack-label' +
+      shape +
+      '" style="top:' +
+      fit.top +
+      ";left:" +
+      fit.left +
+      ";width:" +
+      fit.width +
+      ";height:" +
+      fit.height +
+      '">' +
+      '<span class="pack-mark" aria-hidden="true"></span>' +
+      '<span class="pack-brand">Tej Kaya</span>' +
+      '<span class="pack-hi">' +
+      product.hindi +
+      "</span>" +
+      '<span class="pack-rule"></span>' +
+      '<span class="pack-name">' +
+      product.name +
+      "</span>" +
+      '<span class="pack-meta">' +
+      product.number +
+      " · " +
+      product.category +
+      "</span>" +
+      "</div>"
+    );
+  }
+
+  function cardHtml(product) {
+    return (
+      '<a class="product-card" href="' +
       productHref(product.slug) +
       '">' +
       '<div class="product-card-media">' +
@@ -215,6 +245,7 @@
       '" alt="' +
       product.name +
       '">' +
+      packLabelHtml(product) +
       "</div>" +
       '<div class="product-card-meta">' +
       '<span class="eyebrow">' +
@@ -293,6 +324,7 @@
       '" alt="' +
       product.name +
       '">' +
+      packLabelHtml(product) +
       "</div>" +
       '<div class="product-hero-copy reveal">' +
       '<p class="eyebrow">The Collection  ·  ' +
