@@ -1,2 +1,4 @@
-*-blank.jpg
+.DS_Store
 .herenow/
+.playwright-mcp/
+*-blank.jpg
