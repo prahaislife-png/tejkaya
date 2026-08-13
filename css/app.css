@@ -1,0 +1,293 @@
+.app-shell {
+  width: var(--page);
+  margin: 0 auto;
+  padding: 2.5rem 0 5rem;
+}
+
+.app-kicker {
+  max-width: 38rem;
+}
+
+.progress-track {
+  height: 2px;
+  background: var(--paper);
+  margin: 1.5rem 0 2rem;
+  position: relative;
+}
+
+.progress-track > span {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.4s var(--ease);
+}
+
+.q-card,
+.panel {
+  background: var(--cream);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  border: 1px solid var(--line);
+}
+
+.choice-list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.4rem 0 1.6rem;
+}
+
+.choice-list label {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  background: var(--ivory);
+  cursor: pointer;
+}
+
+.choice-list label:hover,
+.choice-list label.is-on {
+  border-color: var(--gold);
+}
+
+.choice-list input {
+  margin-top: 0.25rem;
+  accent-color: var(--forest);
+}
+
+.app-nav-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.8rem;
+  margin: 1.6rem 0 2rem;
+}
+
+.score-cell {
+  background: var(--ivory);
+  padding: 0.9rem 0.75rem 1rem;
+  border: 1px solid var(--line);
+}
+
+.score-cell strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.habit-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.habit-list article {
+  padding: 1.1rem 0;
+  border-top: 1px solid var(--line);
+}
+
+.habit-list article:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.field label,
+.field .lbl {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+}
+
+.field input,
+.field select,
+.field textarea {
+  font: inherit;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  background: var(--ivory);
+  color: var(--ink);
+}
+
+.field textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 1.5rem;
+}
+
+.tabs button {
+  border: 1px solid var(--line);
+  background: transparent;
+  font: inherit;
+  font-size: var(--fs-nav);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+}
+
+.tabs button.is-on {
+  background: var(--forest);
+  color: var(--cream);
+  border-color: var(--forest);
+}
+
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  margin: 1.2rem 0 2rem;
+}
+
+.day-grid a,
+.day-grid span {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  font-size: 0.8rem;
+  background: var(--ivory);
+}
+
+.day-grid a.is-done {
+  background: var(--forest);
+  color: var(--gold-bright);
+  border-color: var(--forest);
+}
+
+.day-grid a.is-here {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.studio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.studio-card {
+  display: block;
+  padding: 1.4rem;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  min-height: 11rem;
+}
+
+.studio-card h3 {
+  font-size: 1.45rem;
+}
+
+.coming-list {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.coming-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+  list-style: none;
+}
+
+.notice-box {
+  background: var(--ivory);
+  border: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin: 1.2rem 0;
+}
+
+.err {
+  color: #7a2e2e;
+  font-size: 0.9rem;
+}
+
+.ok {
+  color: var(--forest);
+}
+
+.app-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+.check-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0;
+}
+
+.check-list label {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  cursor: pointer;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.history-table th,
+.history-table td {
+  text-align: left;
+  padding: 0.55rem 0.4rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+@media (max-width: 980px) {
+  .score-grid,
+  .studio-grid,
+  .field-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .day-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .score-grid,
+  .studio-grid,
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+}

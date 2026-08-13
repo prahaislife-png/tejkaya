@@ -61,11 +61,14 @@
       '<div class="nav-right">' +
       '<a class="btn btn-ghost" href="' +
       p +
-      'index.html#early-access">Early Access</a>' +
+      'account.html" data-account-cta>Account</a>' +
       "</div>" +
       "</div>" +
       '<div class="mobile-panel" id="mobile-panel">' +
       links +
+      '<a href="' +
+      p +
+      'account.html" data-account-cta>Account</a>' +
       '<a href="' +
       p +
       'index.html#early-access">Early Access</a>' +
@@ -119,6 +122,20 @@
       p +
       'collection.html">All vessels</a></li>' +
       "</ul></div>" +
+      '<div><p class="footer-label">The Atelier</p><ul>' +
+      '<li><a href="' +
+      p +
+      'ritual-finder.html">Ritual Finder</a></li>' +
+      '<li><a href="' +
+      p +
+      'private.html">Private</a></li>' +
+      '<li><a href="' +
+      p +
+      '21-days.html">21 Days</a></li>' +
+      '<li><a href="' +
+      p +
+      'account.html">Account</a></li>' +
+      "</ul></div>" +
       '<div><p class="footer-label">Correspondence</p><ul>' +
       "<li><a href=\"mailto:hello@tejkaya.com\">hello@tejkaya.com</a></li>" +
       '<li><a href="' +
@@ -146,6 +163,17 @@
       if (!header) return;
       header.classList.toggle("is-scrolled", window.scrollY > 12);
     });
+
+    try {
+      var session = JSON.parse(sessionStorage.getItem("tejKaya.session") || "null");
+      if (session && session.firstName) {
+        document.querySelectorAll("[data-account-cta]").forEach(function (node) {
+          node.textContent = session.firstName;
+        });
+      }
+    } catch (e) {
+      /* ignore */
+    }
 
     if (toggle && panel) {
       toggle.addEventListener("click", function () {

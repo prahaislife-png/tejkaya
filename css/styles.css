@@ -999,7 +999,7 @@ body::before {
   width: var(--page);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
   gap: 2.5rem;
 }
 
