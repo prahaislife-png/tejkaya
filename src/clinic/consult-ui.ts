@@ -3,6 +3,12 @@ import { el } from "../lib/dom";
 import { uid } from "../lib/crypto";
 import { downloadText } from "../lib/download";
 import {
+  calBookingUrl,
+  calLinkForSku,
+  mountCalInline,
+  type CalBookingSuccess
+} from "./cal";
+import {
   CLINIC,
   CLINIC_MEDICAL_NOTE,
   CONSULT_SKUS,
@@ -11,36 +17,37 @@ import {
   skuById,
   type ConsultSku
 } from "./config";
-import {
-  googleCalendarUrl,
-  icsEvent,
-  slotsForDay,
-  upcomingDays,
-  upiHref,
-  whatsappHref,
-  type Slot
-} from "./calendar";
-import {
-  allBookings,
-  createPackFromSku,
-  saveBooking,
-  savePack,
-  takenKeys,
-  type Booking
-} from "../store/clinic";
+import { googleCalendarUrl, icsEvent, upiHref, whatsappHref } from "./calendar";
+import { createPackFromSku, saveBooking, savePack, type Booking } from "../store/clinic";
 
 function eventCopy(booking: Booking, sku: ConsultSku): { title: string; details: string; location: string } {
   const title = `${sku.mode === "clinic" ? "Clinic" : "Video"} consult — ${CLINIC.doctor}`;
-  const location = sku.mode === "clinic" ? CLINIC.address : "Video consult — link on WhatsApp";
+  const location =
+    sku.mode === "clinic" ? CLINIC.address : booking.videoCallUrl || "Cal.com video — link in confirmation email";
   const details = [
     CLINIC.name,
     `${booking.firstName} · ${booking.phone}`,
     sku.title,
     `Reason: ${booking.reason}`,
     CLINIC.phoneDisplay,
+    booking.calUid ? `Cal.com ${booking.calUid}` : "",
     CLINIC_MEDICAL_NOTE
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
   return { title, details, location };
+}
+
+function kolkataStamp(iso: string): { dateIso: string; time: string; start: Date; end: Date } {
+  const start = new Date(iso);
+  const dateIso = start.toLocaleDateString("en-CA", { timeZone: CLINIC.timezone });
+  const time = start.toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: CLINIC.timezone
+  });
+  return { dateIso, time, start, end: start };
 }
 
 export async function mountConsult(root: HTMLElement): Promise<void> {
@@ -48,8 +55,6 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
   const params = new URLSearchParams(location.search);
   let skuId = params.get("sku") || "video-1";
   if (!skuById(skuId)) skuId = "video-1";
-  let day = upcomingDays(1)[0] ?? new Date();
-  let slot: Slot | null = null;
   let firstName = user?.firstName ?? "";
   let email = user?.email ?? "";
   let phone = "";
@@ -59,16 +64,51 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
   let done: Booking | null = null;
   let doneSku: ConsultSku | null = null;
 
+  async function onCalBooked(data: CalBookingSuccess, sku: ConsultSku): Promise<void> {
+    const attendee = data.attendees?.[0];
+    const name = firstName.trim() || attendee?.name || "Guest";
+    const mail = email.trim().toLowerCase() || attendee?.email || "";
+    if (phone.replace(/\D/g, "").length < 10) {
+      error = "Add a WhatsApp number above so the clinic can confirm, then book the time again if needed.";
+      await paint();
+      return;
+    }
+    const startIso = data.startTime || new Date().toISOString();
+    const endIso = data.endTime || new Date(new Date(startIso).getTime() + 30 * 60 * 1000).toISOString();
+    const stamp = kolkataStamp(startIso);
+    const pack = createPackFromSku(sku, { email: mail, userId: user?.id });
+    pack.visitsUsed = 1;
+    await savePack(pack);
+    const booking: Booking = {
+      id: uid("bkg"),
+      createdAt: new Date().toISOString(),
+      userId: user?.id,
+      firstName: name,
+      email: mail,
+      phone: phone.trim(),
+      skuId: sku.id,
+      packId: pack.id,
+      mode: sku.mode,
+      reason,
+      notes: notes.trim(),
+      dateIso: stamp.dateIso,
+      time: stamp.time,
+      startIso,
+      endIso,
+      status: "confirmed",
+      payStatus: "unpaid",
+      priceInr: sku.priceInr,
+      calUid: data.uid,
+      videoCallUrl: data.videoCallUrl
+    };
+    await saveBooking(booking);
+    done = booking;
+    doneSku = sku;
+    await paint();
+  }
+
   async function paint(): Promise<void> {
     const sku = skuById(skuId) ?? CONSULT_SKUS[1];
-    const bookings = await allBookings();
-    const taken = takenKeys(bookings);
-    const days = upcomingDays(12);
-    const slots = slotsForDay(day, sku.mode).filter(
-      (s) => !taken.has(`${s.dateIso}|${s.time}|${sku.mode}`)
-    );
-    if (slot && !slots.some((s) => s.time === slot?.time && s.dateIso === slot.dateIso)) slot = null;
-
     root.replaceChildren();
     const wrap = el("div", { class: "app-shell" });
 
@@ -78,19 +118,23 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       const end = new Date(done.endIso);
       const cal = googleCalendarUrl({ ...copy, start, end });
       const wa = whatsappHref(
-        `Namaste, I booked ${doneSku.title} with ${CLINIC.doctor} on ${done.dateIso} at ${done.time}. Name: ${done.firstName}. Phone: ${done.phone}. Reason: ${done.reason}. Fee ${formatInr(done.priceInr)}. I will confirm payment on WhatsApp / UPI.`
+        `Namaste, I booked ${doneSku.title} with ${CLINIC.doctor} on ${done.dateIso} at ${done.time} via Cal.com. Name: ${done.firstName}. Phone: ${done.phone}. Reason: ${done.reason}. Fee ${formatInr(done.priceInr)}. I will confirm payment on WhatsApp / UPI.`
       );
       wrap.innerHTML = `<p class="eyebrow">${CLINIC.name}</p>
-        <h1>Request received.</h1>
-        <p class="lede">WhatsApp the clinic to confirm. Add it to Google Calendar. ${CLINIC.doctor} writes any plan or prescription in her name after the visit.</p>
+        <h1>Booked on Cal.com.</h1>
+        <p class="lede">WhatsApp the clinic to confirm payment. ${CLINIC.doctor} writes any plan or prescription in her name after the visit.</p>
         <div class="panel">
           <p><strong>${doneSku.title}</strong> · ${formatInr(done.priceInr)}</p>
           <p>${done.dateIso} · ${done.time} · ${done.mode === "clinic" ? "Chinchwad clinic" : "Video"}</p>
+          ${done.videoCallUrl ? `<p class="micro">Video: ${done.videoCallUrl}</p>` : ""}
           <p class="micro">Payment: unpaid until you send UPI on WhatsApp or pay at the clinic. We do not fake a successful Razorpay charge.</p>
         </div>`;
       const actions = el("div", { class: "app-actions" });
       actions.append(el("a", { class: "btn btn-gold", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp confirm"]));
       actions.append(el("a", { class: "btn btn-solid", href: cal, target: "_blank", rel: "noopener" }, ["Google Calendar"]));
+      if (done.videoCallUrl) {
+        actions.append(el("a", { class: "btn btn-ghost", href: done.videoCallUrl, target: "_blank", rel: "noopener" }, ["Join video"]));
+      }
       const icsBtn = el("button", { class: "btn btn-ghost", type: "button" }, ["Download .ics"]);
       icsBtn.addEventListener("click", () => {
         downloadText("shree-urocare-consult.ics", icsEvent({ ...copy, start, end }), "text/calendar");
@@ -118,7 +162,7 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       el("p", { class: "eyebrow" }, ["Physician · Shree Urocare"]),
       el("h1", {}, ["Consult with Dr Rajeshree."]),
       el("p", { class: "lede app-kicker" }, [
-        `${CLINIC.credentials}. ${CLINIC.role}, ${CLINIC.city}. In-clinic for Pune. Video consult India-wide.`
+        `${CLINIC.credentials}. ${CLINIC.role}, ${CLINIC.city}. Times are live from Cal.com — Mon–Sat, 10:00–20:00 IST.`
       ]),
       el("p", { class: "subtle" }, [CLINIC.hindi])
     );
@@ -147,10 +191,15 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       card.append(el("h3", {}, [s.title]));
       card.append(el("p", { class: "price-lg" }, [formatInr(s.priceInr)]));
       card.append(el("p", {}, [s.blurb]));
-      if (s.visits > 1) card.append(el("p", { class: "micro" }, [`${s.visits} visits · ${formatInr(Math.round(s.priceInr / s.visits))} each`]));
+      if (s.visits > 1) {
+        card.append(
+          el("p", { class: "micro" }, [
+            `${s.visits} visits · ${formatInr(Math.round(s.priceInr / s.visits))} each · book follow-ups on the same calendar`
+          ])
+        );
+      }
       card.addEventListener("click", () => {
         skuId = s.id;
-        slot = null;
         void paint();
       });
       packs.append(card);
@@ -163,16 +212,12 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       <div class="field"><label for="ph">WhatsApp number</label><input id="ph" required inputmode="tel" autocomplete="tel" placeholder="10-digit mobile" /></div>
       <div class="field field-wide"><label for="em">Email</label><input id="em" type="email" required autocomplete="email" /></div>
       <div class="field field-wide"><label for="reason">Reason for visit</label><select id="reason"></select></div>
-      <div class="field field-wide"><label for="notes">Notes for the doctor (optional)</label><textarea id="notes"></textarea></div>
-      <div class="field"><label for="day">Day</label><select id="day"></select></div>
-      <div class="field"><label for="slot">Time (30 min)</label><select id="slot"></select></div>`;
+      <div class="field field-wide"><label for="notes">Notes for the doctor (optional)</label><textarea id="notes"></textarea></div>`;
     const fn = form.querySelector("#fn") as HTMLInputElement;
     const ph = form.querySelector("#ph") as HTMLInputElement;
     const em = form.querySelector("#em") as HTMLInputElement;
     const reasonEl = form.querySelector("#reason") as HTMLSelectElement;
     const notesEl = form.querySelector("#notes") as HTMLTextAreaElement;
-    const dayEl = form.querySelector("#day") as HTMLSelectElement;
-    const slotEl = form.querySelector("#slot") as HTMLSelectElement;
     fn.value = firstName;
     ph.value = phone;
     em.value = email;
@@ -181,94 +226,62 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       reasonEl.append(el("option", { value: r.id }, [r.label]));
     }
     reasonEl.value = reason;
-    for (const d of days) {
-      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-      const label = d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
-      dayEl.append(el("option", { value: iso }, [label]));
-    }
-    const dayIso = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
-    dayEl.value = dayIso;
-    slotEl.append(el("option", { value: "" }, [slots.length ? "Select a time" : "No times left this day"]));
-    for (const s of slots) {
-      slotEl.append(el("option", { value: s.time }, [s.label]));
-    }
-    if (slot) slotEl.value = slot.time;
-
     fn.addEventListener("input", () => (firstName = fn.value));
     ph.addEventListener("input", () => (phone = ph.value));
     em.addEventListener("input", () => (email = em.value));
     notesEl.addEventListener("input", () => (notes = notesEl.value));
     reasonEl.addEventListener("change", () => (reason = reasonEl.value));
-    dayEl.addEventListener("change", () => {
-      const [y, m, d] = dayEl.value.split("-").map(Number);
-      day = new Date(y, m - 1, d);
-      slot = null;
-      void paint();
-    });
-    slotEl.addEventListener("change", () => {
-      slot = slots.find((s) => s.time === slotEl.value) ?? null;
-    });
-
     if (error) form.append(el("p", { class: "err field-wide" }, [error]));
-    const go = el("button", { class: "btn btn-gold field-wide", type: "submit" }, [
-      `Request ${sku.title} · ${formatInr(sku.priceInr)}`
-    ]);
-    form.append(go);
     form.append(
       el("p", { class: "micro field-wide" }, [
-        "Confirm on WhatsApp after this form. Fees are paid by UPI or at the clinic — this page does not take card payment and will not show a fake success."
+        "Pick a time in the Cal.com calendar below. Fees are paid by UPI or at the clinic — this page does not take card payment and will not show a fake success."
       ])
     );
-    form.addEventListener("submit", async (ev) => {
-      ev.preventDefault();
-      error = "";
-      const chosen = slots.find((s) => s.time === slotEl.value);
-      if (!fn.value.trim() || !em.value.includes("@") || ph.value.replace(/\D/g, "").length < 10) {
-        error = "Please leave your name, email, and a working WhatsApp number.";
-        await paint();
-        return;
-      }
-      if (!chosen) {
-        error = "Please choose a day and time that is still free.";
-        await paint();
-        return;
-      }
-      const pack = createPackFromSku(sku, { email: em.value.trim().toLowerCase(), userId: user?.id });
-      pack.visitsUsed = 1;
-      await savePack(pack);
-      const booking: Booking = {
-        id: uid("bkg"),
-        createdAt: new Date().toISOString(),
-        userId: user?.id,
-        firstName: fn.value.trim(),
-        email: em.value.trim().toLowerCase(),
-        phone: ph.value.trim(),
-        skuId: sku.id,
-        packId: pack.id,
-        mode: sku.mode,
-        reason: reasonEl.value,
-        notes: notesEl.value.trim(),
-        dateIso: chosen.dateIso,
-        time: chosen.time,
-        startIso: chosen.start.toISOString(),
-        endIso: chosen.end.toISOString(),
-        status: "requested",
-        payStatus: "unpaid",
-        priceInr: sku.priceInr
-      };
-      await saveBooking(booking);
-      done = booking;
-      doneSku = sku;
-      await paint();
-    });
     wrap.append(form);
-    wrap.append(
-      el("p", { class: "disclaimer" }, [
-        CLINIC_MEDICAL_NOTE,
-        " After the visit the doctor may write a plan on Shree Urocare letterhead."
+
+    const calPanel = el("div", { class: "panel", style: "margin-top:1.2rem" });
+    calPanel.append(
+      el("p", { class: "eyebrow" }, ["Cal.com"]),
+      el("h2", {}, [sku.mode === "clinic" ? "In-clinic times" : "Video times"]),
+      el("p", { class: "micro" }, [
+        sku.visits > 1
+          ? "This pack is three video visits. Book the first slot now; book the next two when you need them. Confirm the pack fee on WhatsApp."
+          : `Live availability for ${sku.title}.`
       ])
     );
+    const calBox = el("div", { id: "cal-embed", class: "cal-embed" });
+    calBox.setAttribute("data-cal-link", calLinkForSku(sku.id));
+    calPanel.append(calBox);
+    calPanel.append(
+      el("p", { class: "micro" }, [
+        el("a", { href: calBookingUrl(sku.id), target: "_blank", rel: "noopener" }, ["Open this calendar on Cal.com"])
+      ])
+    );
+    wrap.append(calPanel);
+    wrap.append(el("p", { class: "disclaimer" }, [CLINIC_MEDICAL_NOTE]));
     root.append(wrap);
+
+    const reasonLabel = VISIT_REASONS.find((r) => r.id === reason)?.label ?? reason;
+    const prefillNotes = [
+      `WhatsApp: ${phone || "(add above)"}`,
+      `Visit: ${sku.title} (${formatInr(sku.priceInr)})`,
+      `Reason: ${reasonLabel}`,
+      notes.trim()
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const ns = sku.mode === "clinic" ? "clinic" : "video";
+    mountCalInline({
+      el: calBox,
+      namespace: ns,
+      calLink: calLinkForSku(sku.id),
+      name: firstName,
+      email,
+      notes: prefillNotes,
+      onBooked: (data) => {
+        void onCalBooked(data, sku);
+      }
+    });
   }
 
   await paint();

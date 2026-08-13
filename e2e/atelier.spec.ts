@@ -102,19 +102,52 @@ test("consult booking and clinic letterhead desk", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Consult with Dr Rajeshree." })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Video follow-up pack (3 visits)" })).toBeVisible();
   await expect(page.getByText("₹3,000")).toBeVisible();
-  await page.getByRole("button", { name: /Video follow-up pack/ }).click();
+  await expect(page.locator("#cal-embed")).toHaveAttribute("data-cal-link", /govin-floyd-6lk5bw\/video-30/);
+  await page.getByRole("button", { name: /In-clinic visit/ }).click();
+  await expect(page.locator("#cal-embed")).toHaveAttribute("data-cal-link", /govin-floyd-6lk5bw\/clinic-30/);
+  await expect(page.getByRole("link", { name: "Open this calendar on Cal.com" })).toHaveAttribute(
+    "href",
+    "https://cal.com/govin-floyd-6lk5bw/clinic-30"
+  );
   await page.locator("#fn").fill("Anika");
   await page.locator("#ph").fill("9876543210");
   await page.locator("#em").fill(`consult.${Date.now()}@example.com`);
   await page.locator("#reason").selectOption("piles");
-  const slot = page.locator("#slot");
-  await expect(slot.locator("option")).not.toHaveCount(1);
-  const value = await slot.locator("option").nth(1).getAttribute("value");
-  await slot.selectOption(value || "");
-  await page.getByRole("button", { name: /Request Video follow-up pack/ }).click();
-  await expect(page.getByRole("heading", { name: "Request received." })).toBeVisible();
-  await expect(page.getByRole("link", { name: "WhatsApp confirm" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Google Calendar" })).toBeVisible();
+
+  await page.evaluate(() => {
+    return new Promise<void>((resolve, reject) => {
+      const req = indexedDB.open("tej-kaya", 2);
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => {
+        const db = req.result;
+        const tx = db.transaction("bookings", "readwrite");
+        tx.oncomplete = () => {
+          db.close();
+          resolve();
+        };
+        tx.onerror = () => reject(tx.error);
+        tx.objectStore("bookings").put({
+          id: "bkg-e2e",
+          createdAt: new Date().toISOString(),
+          firstName: "Anika",
+          email: "anika@example.com",
+          phone: "9876543210",
+          skuId: "clinic-1",
+          mode: "clinic",
+          reason: "piles",
+          notes: "Cal.com e2e seed",
+          dateIso: "2026-08-14",
+          time: "11:00",
+          startIso: new Date().toISOString(),
+          endIso: new Date().toISOString(),
+          status: "confirmed",
+          payStatus: "unpaid",
+          priceInr: 700,
+          calUid: "e2e-cal"
+        });
+      };
+    });
+  });
 
   await page.goto("/clinic.html");
   await page.locator("#pin").fill("urocare");

@@ -24,6 +24,8 @@ export interface Booking {
   status: BookingStatus;
   payStatus: PayStatus;
   priceInr: number;
+  calUid?: string;
+  videoCallUrl?: string;
 }
 
 export interface ConsultPack {
