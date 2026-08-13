@@ -319,7 +319,7 @@
 .consult-page {
   width: min(1480px, calc(100% - 2 * var(--gutter)));
   margin: 0 auto;
-  padding: 1.15rem 0 2.8rem;
+  padding: 0.85rem 0 2.4rem;
 }
 
 .consult-mast {
@@ -327,14 +327,14 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 1.5rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.7rem;
   border-bottom: 1px solid var(--line);
 }
 
 .consult-mast h1 {
   margin: 0;
-  font-size: clamp(1.85rem, 2.8vw, 2.55rem);
+  font-size: clamp(1.7rem, 2.5vw, 2.35rem);
 }
 
 .consult-mast-meta {
@@ -371,12 +371,24 @@
 .consult-card {
   background: var(--cream);
   border: 1px solid var(--line);
-  padding: 0.85rem 0.95rem 0.95rem;
+  padding: 0.95rem 1rem 1.05rem;
 }
 
 .consult-card h2 {
-  font-size: 1.2rem;
-  margin: 0 0 0.4rem;
+  font-size: 1.28rem;
+  margin: 0 0 0.35rem;
+}
+
+.consult-note {
+  margin-top: 0.75rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+
+.consult-desk {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  padding: 0.7rem;
 }
 
 .consult-cred {
@@ -435,8 +447,8 @@
 .consult-skus {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.7rem;
+  gap: 0.45rem;
+  margin-bottom: 0.55rem;
 }
 
 .sku-tab {
@@ -446,14 +458,15 @@
   color: inherit;
   width: 100%;
   min-height: 0;
-  padding: 0.7rem 0.8rem;
-  background: var(--cream);
+  padding: 0.55rem 0.7rem;
+  background: var(--ivory);
   border: 1px solid var(--line);
 }
 
 .sku-tab h3 {
-  font-size: 1.05rem;
-  margin: 0.1rem 0 0;
+  font-size: 0.98rem;
+  margin: 0.08rem 0 0;
+  line-height: 1.2;
 }
 
 .sku-tab .price-lg {
@@ -469,9 +482,11 @@
 
 .consult-form.field-grid {
   grid-template-columns: 1fr 1fr;
-  gap: 0.55rem 0.75rem;
-  padding: 0.85rem 0.95rem;
-  margin: 0 0 0.7rem;
+  gap: 0.45rem 0.7rem;
+  padding: 0.7rem 0.75rem;
+  margin: 0 0 0.55rem;
+  background: var(--ivory);
+  border: 1px solid var(--line);
 }
 
 .consult-form .field-notes {
@@ -489,9 +504,9 @@
 }
 
 .consult-cal {
-  background: var(--cream);
+  background: var(--ivory);
   border: 1px solid var(--line);
-  padding: 0.75rem 0.85rem 0.9rem;
+  padding: 0.65rem 0.75rem 0.75rem;
 }
 
 .consult-cal-head {
@@ -508,8 +523,9 @@
 }
 
 .consult-page .cal-embed {
-  min-height: 540px;
-  margin-top: 0.45rem;
+  min-height: 520px;
+  height: 520px;
+  margin-top: 0.35rem;
 }
 
 .consult-confirm {

@@ -58,72 +58,48 @@ function card(eyebrow: string, title: string, children: Array<Node | string>): H
 }
 
 function leftRail(sku: ConsultSku): HTMLElement {
-  const rail = el("div", { class: "consult-rail" });
-  rail.append(
-    card("Physician", CLINIC.doctor, [
-      el("p", { class: "consult-cred" }, [`${CLINIC.credentials}`]),
-      el("p", {}, [CLINIC.role]),
-      el("p", { class: "subtle consult-hi" }, [CLINIC.hindi]),
-      el("p", { class: "micro" }, ["Marathi · Hindi · English. 30 minutes. Letterhead plan after the visit, in her name."])
+  const fees = el("ul", { class: "consult-fees" });
+  for (const s of CONSULT_SKUS) {
+    const li = el("li", { class: s.id === sku.id ? "is-on" : "" });
+    li.append(el("span", {}, [s.title]), el("strong", {}, [formatInr(s.priceInr)]));
+    fees.append(li);
+  }
+  return card("Physician", CLINIC.doctor, [
+    el("p", { class: "consult-cred" }, [CLINIC.credentials]),
+    el("p", {}, [CLINIC.role]),
+    el("p", { class: "subtle consult-hi" }, [CLINIC.hindi]),
+    el("p", { class: "micro" }, ["Marathi · Hindi · English · 30 minutes"]),
+    fees,
+    el("p", { class: "micro" }, [
+      sku.mode === "clinic"
+        ? "In-clinic for examination. Pay at the desk or UPI after you book. No card charge here."
+        : "Video anywhere in India. Quiet room, camera on. Pack: first slot now, follow-ups on the same calendar."
     ]),
-    card("Fees", "Pay at clinic or UPI", [
-      el("ul", { class: "consult-fees" }, [
-        ...CONSULT_SKUS.map((s) => {
-          const li = el("li", { class: s.id === sku.id ? "is-on" : "" });
-          li.append(
-            el("span", {}, [s.title]),
-            el("strong", {}, [formatInr(s.priceInr)])
-          );
-          return li;
-        })
-      ]),
-      el("p", { class: "micro" }, [
-        "No card charge on this page. Confirm on WhatsApp. Pack: book the first slot now, the next two when you need them."
-      ])
-    ]),
-    card("This visit", sku.mode === "clinic" ? "In Chinchwad" : "On video", [
-      el("ul", { class: "consult-list" }, [
-        sku.mode === "clinic"
-          ? el("li", {}, ["Examination and procedures are in-clinic only."])
-          : el("li", {}, ["India-wide. Quiet room, camera on, reports as photos if you have them."]),
-        el("li", {}, ["Bring prior reports, a medicine list, and what you have already tried."]),
-        el("li", {}, ["Tej Kaya jars are not a substitute for this visit."])
-      ])
-    ])
-  );
-  return rail;
+    el("p", { class: "micro" }, ["Bring reports and a medicine list. Tej Kaya jars are not this visit."])
+  ]);
 }
 
 function rightRail(sku: ConsultSku): HTMLElement {
-  const rail = el("div", { class: "consult-rail" });
   const tel = `tel:+${CLINIC.whatsapp}`;
-  const wa = whatsappHref(
-    `Namaste, I would like to book ${sku.title} with ${CLINIC.doctor}.`
-  );
-  rail.append(
-    card("Clinic", CLINIC.name, [
-      el("p", { class: "micro" }, [CLINIC.hours, " IST"]),
-      el("p", {}, [CLINIC.address]),
-      el("div", { class: "consult-links" }, [
-        el("a", { class: "text-link", href: CLINIC.maps, target: "_blank", rel: "noopener" }, ["Map"]),
-        el("a", { class: "text-link", href: tel }, ["Call"]),
-        el("a", { class: "text-link", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp"]),
-        el("a", { class: "text-link", href: CLINIC.site, target: "_blank", rel: "noopener" }, ["shreeurocare.in"])
-      ]),
-      el("p", { class: "micro" }, ["Landmark: Chapekar Chowk flyover, near New English School, Chinchwad Gaon."])
+  const wa = whatsappHref(`Namaste, I would like to book ${sku.title} with ${CLINIC.doctor}.`);
+  return card("Clinic", CLINIC.name, [
+    el("p", { class: "micro" }, [CLINIC.hours, " IST"]),
+    el("p", {}, [CLINIC.address]),
+    el("div", { class: "consult-links" }, [
+      el("a", { class: "text-link", href: CLINIC.maps, target: "_blank", rel: "noopener" }, ["Map"]),
+      el("a", { class: "text-link", href: tel }, ["Call"]),
+      el("a", { class: "text-link", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp"]),
+      el("a", { class: "text-link", href: CLINIC.site, target: "_blank", rel: "noopener" }, ["shreeurocare.in"])
     ]),
-    card("After you pick a time", "Three steps", [
-      el("ol", { class: "consult-list" }, [
-        el("li", {}, ["Cal.com emails the slot. Video link arrives there for remote visits."]),
-        el("li", {}, ["WhatsApp the clinic with your name and UPI screenshot, or pay at the desk."]),
-        el("li", {}, ["Arrive 10 minutes early in clinic. For video, join from the confirmation mail."])
-      ])
+    el("p", { class: "micro" }, ["Chapekar Chowk flyover, near New English School."]),
+    el("p", { class: "eyebrow" }, ["After you pick a time"]),
+    el("ol", { class: "consult-list" }, [
+      el("li", {}, ["Cal.com emails the slot. Video link is in that mail."]),
+      el("li", {}, ["WhatsApp name + UPI screenshot, or pay at the desk."]),
+      el("li", {}, ["Clinic: 10 minutes early. Video: join from the mail."])
     ]),
-    card("Note", "Not a Tej Kaya product", [
-      el("p", { class: "micro" }, [CLINIC_MEDICAL_NOTE])
-    ])
-  );
-  return rail;
+    el("p", { class: "micro consult-note" }, [CLINIC_MEDICAL_NOTE])
+  ]);
 }
 
 export async function mountConsult(root: HTMLElement): Promise<void> {
@@ -206,7 +182,9 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     page.append(mast());
 
     const board = el("div", { class: "consult-board" });
-    board.append(leftRail(sku));
+    const leftCol = el("div", { class: "consult-rail" });
+    leftCol.append(leftRail(sku));
+    board.append(leftCol);
 
     const main = el("div", { class: "consult-main" });
 
@@ -254,7 +232,7 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       panel.append(actions);
       panel.append(el("p", { class: "micro" }, [`UPI: ${CLINIC.upiId}. Send the screenshot on WhatsApp.`]));
       main.append(panel);
-      board.append(main, rightRail(doneSku));
+      board.append(main, el("div", { class: "consult-rail" }, [rightRail(doneSku)]));
       page.append(board);
       root.append(page);
       return;
@@ -277,7 +255,6 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       });
       skus.append(tab);
     }
-    main.append(skus);
 
     const form = el("form", { class: "consult-form field-grid" });
     form.innerHTML = `
@@ -305,7 +282,6 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     notesEl.addEventListener("input", () => (notes = notesEl.value));
     reasonEl.addEventListener("change", () => (reason = reasonEl.value));
     if (error) form.append(el("p", { class: "err field-wide" }, [error]));
-    main.append(form);
 
     const calPanel = el("div", { class: "consult-cal" });
     calPanel.append(
@@ -327,9 +303,11 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     const calBox = el("div", { id: "cal-embed", class: "cal-embed" });
     calBox.setAttribute("data-cal-link", calLinkForSku(sku.id));
     calPanel.append(calBox);
-    main.append(calPanel);
+    const desk = el("div", { class: "consult-desk" });
+    desk.append(skus, form, calPanel);
+    main.append(desk);
 
-    board.append(main, rightRail(sku));
+    board.append(main, el("div", { class: "consult-rail" }, [rightRail(sku)]));
     page.append(board);
     root.append(page);
 
