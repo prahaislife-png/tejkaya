@@ -45,7 +45,7 @@
     }).join("");
 
     return (
-      '<div class="announcement"><span>The House of Tej Kaya is in atelier. Early access opens first.</span></div>' +
+      '<div class="announcement"><span>The House of Tej Kaya  ·  Pre-launch  ·  Early access</span></div>' +
       '<header class="site-header" id="site-header">' +
       '<div class="header-inner">' +
       '<button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>' +
@@ -56,8 +56,7 @@
       p +
       'index.html">' +
       logoSvg() +
-      '<span class="brand-word">Tej Kaya</span>' +
-      '<span class="brand-devanagari">तेज काया</span>' +
+      '<span class="brand-lockup"><span class="brand-word">Tej Kaya</span><span class="brand-devanagari">तेज काया</span></span>' +
       "</a>" +
       '<div class="nav-right">' +
       '<a class="btn btn-ghost" href="' +
@@ -226,10 +225,10 @@
       "<h3>" +
       product.name +
       "</h3>" +
-      '<p class="devanagari subtle">' +
+      '<p class="devanagari product-hindi">' +
       product.hindi +
       "</p>" +
-      "<p>" +
+      '<p class="product-tagline">' +
       product.tagline +
       "</p>" +
       '<span class="text-link">View the vessel</span>' +
