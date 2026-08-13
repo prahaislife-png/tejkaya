@@ -134,6 +134,9 @@
       '21-days.html">21 Days</a></li>' +
       '<li><a href="' +
       p +
+      'consult.html">Consult Dr Rajeshree</a></li>' +
+      '<li><a href="' +
+      p +
       'account.html">Account</a></li>' +
       "</ul></div>" +
       '<div><p class="footer-label">Correspondence</p><ul>' +
@@ -349,7 +352,8 @@
       "</dl>" +
       '<div class="product-cta">' +
       '<a class="btn btn-solid" href="index.html#early-access">Request early access</a>' +
-      '<p class="micro">Checkout will open with the first atelier release. No payment is taken now.</p>' +
+      '<a class="btn btn-ghost" href="consult.html">Speak with our physician</a>' +
+      '<p class="micro">Tej Kaya does not treat disease. Dr Rajeshree at Shree Urocare may examine and advise in her own name.</p>' +
       "</div>" +
       "</div>" +
       "</section>" +

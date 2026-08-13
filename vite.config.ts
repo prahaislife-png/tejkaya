@@ -10,7 +10,9 @@ const pages = {
   privateJournal: resolve(root, "private.html"),
   days21: resolve(root, "21-days.html"),
   account: resolve(root, "account.html"),
-  signIn: resolve(root, "sign-in.html")
+  signIn: resolve(root, "sign-in.html"),
+  consult: resolve(root, "consult.html"),
+  clinicDesk: resolve(root, "clinic.html")
 };
 
 function copyLegacySite() {
@@ -39,12 +41,16 @@ function copyLegacySite() {
       mkdirSync(resolve(dist, "21-days"), { recursive: true });
       mkdirSync(resolve(dist, "account"), { recursive: true });
       mkdirSync(resolve(dist, "sign-in"), { recursive: true });
+      mkdirSync(resolve(dist, "consult"), { recursive: true });
+      mkdirSync(resolve(dist, "clinic"), { recursive: true });
       const pretty: Array<[string, string]> = [
         ["ritual-finder.html", "ritual-finder/index.html"],
         ["private.html", "private/index.html"],
         ["21-days.html", "21-days/index.html"],
         ["account.html", "account/index.html"],
-        ["sign-in.html", "sign-in/index.html"]
+        ["sign-in.html", "sign-in/index.html"],
+        ["consult.html", "consult/index.html"],
+        ["clinic.html", "clinic/index.html"]
       ];
       for (const [src, dest] of pretty) {
         const from = resolve(dist, src);

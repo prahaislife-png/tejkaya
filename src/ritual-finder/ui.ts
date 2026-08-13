@@ -119,7 +119,8 @@ export function mountFinder(root: HTMLElement): void {
         downloadText("tej-kaya-ritual.txt", text);
       });
       const account = el("a", { class: "btn btn-gold", href: "account.html" }, ["Open Your Atelier"]);
-      actions.append(printBtn, dl, account);
+      const doctor = el("a", { class: "btn btn-ghost", href: "consult.html" }, ["Speak with our physician"]);
+      actions.append(printBtn, dl, account, doctor);
       wrap.append(actions);
       root.append(wrap);
       return;

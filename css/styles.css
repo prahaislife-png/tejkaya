@@ -920,7 +920,15 @@ body::before {
   font-size: 1.15rem;
 }
 
+.product-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
 .product-cta .micro {
+  flex: 1 1 100%;
   margin-top: 0.8rem;
 }
 

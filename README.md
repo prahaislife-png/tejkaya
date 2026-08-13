@@ -18,7 +18,8 @@ Traditional formulations, presented with the refinement of luxury: five launch v
 | `private.html` (`/private/`) | Private wellness journal |
 | `21-days.html` (`/21-days/`) | 21-day programme |
 | `account.html` (`/account/`) | One account hub |
-| `sign-in.html` | Sign in / create account |
+| `consult.html` | Book Dr Rajeshree (clinic / video / 3-visit pack) |
+| `clinic.html` | Staff desk + letterhead (PIN in `src/clinic/config.ts`) |
 
 ## Digital atelier
 
@@ -28,7 +29,9 @@ One account (email + password, PBKDF2 in IndexedDB on this device) unlocks:
 2. **Tej Kaya Private** — daily journal, 7/30-day views, history, summary, 30-day HTML export.
 3. **21 Days of Tej Kaya** — read / do / notice / complete. Day 21 composes a morning/evening ritual. Relevant days can **Log this in Private**.
 
-Access flags live in `src/access/config.ts`. Razorpay is stubbed in `src/payments/provider.ts` and **will not fake a successful payment**. Physical vessels stay Coming Soon under the same account.
+Physician bookings (Shree Urocare) live at `consult.html`. Fees: in-clinic ₹700, video ₹1,200, 3-visit video pack ₹3,000. WhatsApp confirm + Google Calendar. The doctor writes plans on clinic letterhead from `clinic.html`. Tej Kaya still does not prescribe. Set `CLINIC.upiId` and `deskPin` in `src/clinic/config.ts` before going live.
+
+
 
 Supabase is not connected (MCP unauthenticated). Swap the local IndexedDB adapter later without splitting accounts.
 

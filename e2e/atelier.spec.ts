@@ -96,3 +96,32 @@ test("mobile homepage atelier", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.getByRole("heading", { name: "Three practices. One account." })).toBeVisible();
 });
+
+test("consult booking and clinic letterhead desk", async ({ page }) => {
+  await page.goto("/consult.html");
+  await expect(page.getByRole("heading", { name: "Consult with Dr Rajeshree." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Video follow-up pack (3 visits)" })).toBeVisible();
+  await expect(page.getByText("₹3,000")).toBeVisible();
+  await page.getByRole("button", { name: /Video follow-up pack/ }).click();
+  await page.locator("#fn").fill("Anika");
+  await page.locator("#ph").fill("9876543210");
+  await page.locator("#em").fill(`consult.${Date.now()}@example.com`);
+  await page.locator("#reason").selectOption("piles");
+  const slot = page.locator("#slot");
+  await expect(slot.locator("option")).not.toHaveCount(1);
+  const value = await slot.locator("option").nth(1).getAttribute("value");
+  await slot.selectOption(value || "");
+  await page.getByRole("button", { name: /Request Video follow-up pack/ }).click();
+  await expect(page.getByRole("heading", { name: "Request received." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "WhatsApp confirm" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Google Calendar" })).toBeVisible();
+
+  await page.goto("/clinic.html");
+  await page.locator("#pin").fill("urocare");
+  await page.getByRole("button", { name: "Enter" }).click();
+  await expect(page.getByRole("heading", { name: "Today’s book." })).toBeVisible();
+  await expect(page.getByText("Anika")).toBeVisible();
+  await page.getByRole("button", { name: "Open" }).first().click();
+  await page.locator("textarea").nth(1).fill("Sitz bath. Review in 7 days.");
+  await page.getByRole("button", { name: "Save letterhead" }).click();
+});

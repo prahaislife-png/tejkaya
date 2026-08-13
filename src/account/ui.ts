@@ -51,6 +51,17 @@ async function paint(root: HTMLElement, user: PublicUser): Promise<void> {
   }
   wrap.append(studio);
 
+  const physician = el("a", { class: "studio-card", href: "consult.html", style: "margin-top:1rem;display:block" });
+  physician.append(el("p", { class: "eyebrow" }, ["Shree Urocare"]));
+  physician.append(el("h3", {}, ["Speak with our physician"]));
+  physician.append(
+    el("p", {}, [
+      "Book Dr Rajeshree — in-clinic in Chinchwad or video anywhere in India. She writes the plan. Tej Kaya does not prescribe."
+    ])
+  );
+  physician.append(el("span", { class: "text-link" }, ["Book a consult"]));
+  wrap.append(physician);
+
   const panel = el("div", { class: "panel", style: "margin-top:1.6rem" });
   panel.append(el("p", { class: "eyebrow" }, ["Account"]));
   panel.append(el("p", {}, [`${user.firstName} · ${user.email}`]));

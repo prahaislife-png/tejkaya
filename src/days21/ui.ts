@@ -161,6 +161,11 @@ export async function mountProgram(root: HTMLElement): Promise<void> {
       panel.append(actions);
     }
     if (savedMsg) panel.append(el("p", { class: "ok" }, [savedMsg]));
+    panel.append(
+      el("p", {}, [
+        el("a", { class: "text-link", href: "consult.html" }, ["Speak with our physician"])
+      ])
+    );
     panel.append(el("p", { class: "disclaimer" }, [DISCLAIMER]));
     wrap.append(panel);
     root.append(wrap);

@@ -1,5 +1,5 @@
 const DB_NAME = "tej-kaya";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export type StoreName =
   | "users"
@@ -7,36 +7,55 @@ export type StoreName =
   | "rituals"
   | "journal"
   | "program"
-  | "personalRituals";
+  | "personalRituals"
+  | "bookings"
+  | "packs"
+  | "prescriptions";
+
+function ensureStores(db: IDBDatabase): void {
+  if (!db.objectStoreNames.contains("users")) {
+    const users = db.createObjectStore("users", { keyPath: "id" });
+    users.createIndex("email", "email", { unique: true });
+  }
+  if (!db.objectStoreNames.contains("sessions")) {
+    db.createObjectStore("sessions", { keyPath: "id" });
+  }
+  if (!db.objectStoreNames.contains("rituals")) {
+    const rituals = db.createObjectStore("rituals", { keyPath: "id" });
+    rituals.createIndex("userId", "userId", { unique: false });
+  }
+  if (!db.objectStoreNames.contains("journal")) {
+    const journal = db.createObjectStore("journal", { keyPath: "id" });
+    journal.createIndex("userDate", ["userId", "date"], { unique: true });
+    journal.createIndex("userId", "userId", { unique: false });
+  }
+  if (!db.objectStoreNames.contains("program")) {
+    db.createObjectStore("program", { keyPath: "userId" });
+  }
+  if (!db.objectStoreNames.contains("personalRituals")) {
+    const pr = db.createObjectStore("personalRituals", { keyPath: "id" });
+    pr.createIndex("userId", "userId", { unique: false });
+  }
+  if (!db.objectStoreNames.contains("bookings")) {
+    const bookings = db.createObjectStore("bookings", { keyPath: "id" });
+    bookings.createIndex("dateIso", "dateIso", { unique: false });
+    bookings.createIndex("userId", "userId", { unique: false });
+  }
+  if (!db.objectStoreNames.contains("packs")) {
+    const packs = db.createObjectStore("packs", { keyPath: "id" });
+    packs.createIndex("userId", "userId", { unique: false });
+    packs.createIndex("email", "email", { unique: false });
+  }
+  if (!db.objectStoreNames.contains("prescriptions")) {
+    db.createObjectStore("prescriptions", { keyPath: "bookingId" });
+  }
+}
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION);
     req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains("users")) {
-        const users = db.createObjectStore("users", { keyPath: "id" });
-        users.createIndex("email", "email", { unique: true });
-      }
-      if (!db.objectStoreNames.contains("sessions")) {
-        db.createObjectStore("sessions", { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains("rituals")) {
-        const rituals = db.createObjectStore("rituals", { keyPath: "id" });
-        rituals.createIndex("userId", "userId", { unique: false });
-      }
-      if (!db.objectStoreNames.contains("journal")) {
-        const journal = db.createObjectStore("journal", { keyPath: "id" });
-        journal.createIndex("userDate", ["userId", "date"], { unique: true });
-        journal.createIndex("userId", "userId", { unique: false });
-      }
-      if (!db.objectStoreNames.contains("program")) {
-        db.createObjectStore("program", { keyPath: "userId" });
-      }
-      if (!db.objectStoreNames.contains("personalRituals")) {
-        const pr = db.createObjectStore("personalRituals", { keyPath: "id" });
-        pr.createIndex("userId", "userId", { unique: false });
-      }
+      ensureStores(req.result);
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
@@ -84,6 +103,11 @@ export async function idbGetAllByIndex<T>(
   key: IDBValidKey
 ): Promise<T[]> {
   const rows = await request((db) => db.transaction(store, "readonly").objectStore(store).index(index).getAll(key));
+  return (rows as T[]) || [];
+}
+
+export async function idbGetAll<T>(store: StoreName): Promise<T[]> {
+  const rows = await request((db) => db.transaction(store, "readonly").objectStore(store).getAll());
   return (rows as T[]) || [];
 }
 
