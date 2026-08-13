@@ -85,12 +85,14 @@ function rightRail(sku: ConsultSku): HTMLElement {
   return card("Clinic", CLINIC.name, [
     el("p", { class: "micro" }, [CLINIC.hours, " IST"]),
     el("p", {}, [CLINIC.address]),
-    el("div", { class: "consult-links" }, [
-      el("a", { class: "text-link", href: CLINIC.maps, target: "_blank", rel: "noopener" }, ["Map"]),
-      el("a", { class: "text-link", href: tel }, ["Call"]),
-      el("a", { class: "text-link", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp"]),
-      el("a", { class: "text-link", href: CLINIC.site, target: "_blank", rel: "noopener" }, ["shreeurocare.in"])
-    ]),
+      el("div", { class: "consult-links" }, [
+        el("a", { class: "text-link", href: CLINIC.maps, target: "_blank", rel: "noopener" }, ["Map"]),
+        el("a", { class: "text-link", href: tel }, ["Call"]),
+        el("a", { class: "text-link", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp"]),
+        el("a", { class: "text-link", href: `mailto:${CLINIC.email}` }, ["Email"]),
+        el("a", { class: "text-link", href: CLINIC.instagram, target: "_blank", rel: "noopener" }, ["Instagram"]),
+        el("a", { class: "text-link", href: CLINIC.site, target: "_blank", rel: "noopener" }, ["shreeurocare.in"])
+      ]),
     el("p", { class: "micro" }, ["Chapekar Chowk flyover, near New English School."]),
     el("p", { class: "eyebrow" }, ["After you pick a time"]),
     el("ol", { class: "consult-list" }, [

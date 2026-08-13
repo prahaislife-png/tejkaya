@@ -10,8 +10,11 @@ export const CLINIC = {
   hours: "Mon–Sat, 10:00–20:00",
   phoneDisplay: "+91 87883 29648",
   whatsapp: "918788329648",
+  email: "drrajeshree@shreeurocare.in",
   site: "https://www.shreeurocare.in/",
-  maps: "https://maps.google.com/?q=Shree+Urocare+Chinchwad+Gaon+Pune",
+  instagram: "https://www.instagram.com/shree_urocare",
+  linkedin: "https://www.linkedin.com/in/dr-rajeshree-amilkanthwar-19b0303a5",
+  maps: "https://share.google/U5MafLz8r2G5PAH0A",
   /** Replace with the clinic UPI ID before taking live payments. */
   upiId: "shreeurocare@upi",
   /** Change this PIN before handing the desk to the clinic. */
