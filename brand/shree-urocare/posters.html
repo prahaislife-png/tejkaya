@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Shree Urocare — ad posters</title>
+    <link rel="stylesheet" href="/css/fonts.css" />
+    <style>
+      :root {
+        --ink: #161410;
+        --forest: #1b2a22;
+        --forest-deep: #101914;
+        --cream: #f3ece1;
+        --ivory: #faf6ef;
+        --gold: #b8956a;
+        --gold-dim: #8c7350;
+        --serif: "Cormorant Garamond", "Times New Roman", serif;
+        --dev: "Noto Serif Devanagari", "Cormorant Garamond", serif;
+        --sans: "Outfit", system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #222;
+        font-family: var(--sans);
+      }
+      .board {
+        position: relative;
+        overflow: hidden;
+        color: var(--ink);
+        background: var(--ivory);
+      }
+      .sq { width: 1080px; height: 1080px; }
+      .story { width: 1080px; height: 1920px; }
+      .wide { width: 1920px; height: 1080px; }
+      .board.dark { color: var(--ivory); background: var(--forest-deep); }
+      .bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.38;
+      }
+      .dark .bg { opacity: 0.55; }
+      .frame {
+        position: absolute;
+        inset: 48px;
+        border: 1px solid rgba(184, 149, 106, 0.55);
+        pointer-events: none;
+      }
+      .story .frame { inset: 64px; }
+      .inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 96px 92px 88px;
+        display: flex;
+        flex-direction: column;
+      }
+      .story .inner { padding: 160px 100px 140px; }
+      .wide .inner { padding: 88px 120px; }
+      .eyebrow {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--gold-dim);
+      }
+      .dark .eyebrow { color: var(--gold); }
+      .hi {
+        font-family: var(--dev);
+        font-size: 28px;
+        color: var(--gold-dim);
+        margin: 18px 0 0;
+        line-height: 1.45;
+      }
+      h1 {
+        font-family: var(--serif);
+        font-weight: 500;
+        font-size: 72px;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin: 28px 0 0;
+      }
+      .story h1 { font-size: 88px; }
+      .wide h1 { font-size: 68px; margin-top: 12px; }
+      .sub {
+        font-size: 28px;
+        line-height: 1.4;
+        margin: 22px 0 0;
+        max-width: 16em;
+      }
+      .fee {
+        margin-top: auto;
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        padding-top: 28px;
+      }
+      .fee strong {
+        font-family: var(--serif);
+        font-size: 92px;
+        font-weight: 500;
+        line-height: 1;
+      }
+      .fee span {
+        font-size: 24px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold-dim);
+      }
+      .foot {
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(184, 149, 106, 0.4);
+        font-size: 22px;
+        line-height: 1.45;
+        color: var(--gold-dim);
+      }
+      .dark .foot { color: #d4bc93; }
+      .note {
+        margin-top: 16px;
+        font-size: 18px;
+        letter-spacing: 0.04em;
+        color: var(--gold-dim);
+      }
+      .lines { margin-top: 36px; }
+      .lines p {
+        margin: 0 0 14px;
+        font-size: 30px;
+        line-height: 1.35;
+      }
+      .stack { display: flex; gap: 80px; height: 100%; align-items: stretch; }
+      .stack > div { flex: 1; display: flex; flex-direction: column; }
+    </style>
+  </head>
+  <body>
+    <!-- 01 English consult — main local ad -->
+    <section class="board sq" id="01-consult-en">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Shree Urocare · Chinchwad Gaon</p>
+        <p class="hi">मूत्रविकार, गुदविकार, मुळव्याध, भगंदर तज्ञ</p>
+        <h1>Consult with<br />Dr Rajeshree.</h1>
+        <p class="sub">BAMS · MS (General Surgery). In-clinic visit, 30 minutes. One time.</p>
+        <div class="fee"><strong>₹700</strong><span>clinic visit</span></div>
+        <p class="foot">WhatsApp +91 87883 29648<br />Mon–Sat, 10:00–20:00 · Near New English School</p>
+        <p class="note">A doctor visit. Not a product sale.</p>
+      </div>
+    </section>
+
+    <!-- 02 Marathi consult -->
+    <section class="board sq" id="02-consult-mr">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">श्री युरोकेअर · चिंचवड गाव</p>
+        <p class="hi">मूत्रविकार, गुदविकार, मुळव्याध, भगंदर तज्ञ</p>
+        <h1>डॉ. राजेश्री<br />यांची भेट.</h1>
+        <p class="sub">बीएएमएस · एमएस (जनरल सर्जरी). क्लिनिकमध्ये ३० मिनिटे. एकदाच ₹७००.</p>
+        <div class="fee"><strong>₹७००</strong><span>क्लिनिक भेट</span></div>
+        <p class="foot">व्हॉट्सअॅप +९१ ८७८८३ २९६४८<br />सोम–शनि, सकाळी १० ते रात्री ८ · न्यू इंग्लिश स्कूल जवळ</p>
+        <p class="note">ही डॉक्टर भेट आहे. औषधाची जाहिरात नाही.</p>
+      </div>
+    </section>
+
+    <!-- 03 Who she is -->
+    <section class="board sq dark" id="03-intro-en">
+      <div class="bg" style="background-image:url('textures/forest.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Physician</p>
+        <h1>Dr Rajeshree Amilkanthwar Bompilwar</h1>
+        <p class="sub">BAMS · MS (General Surgery)<br />Consultant proctologist, urologist &amp; Ayurvedic physician</p>
+        <div class="lines">
+          <p>Shree Urocare</p>
+          <p>Saykar Sadan, Bhoi Ali</p>
+          <p>Chapekar Chowk Flyover</p>
+          <p>Chinchwad Gaon, Pune 411033</p>
+        </div>
+        <p class="foot" style="margin-top:auto">shreeurocare.in · +91 87883 29648</p>
+      </div>
+    </section>
+
+    <!-- 04 Who she is Marathi -->
+    <section class="board sq dark" id="04-intro-mr">
+      <div class="bg" style="background-image:url('textures/forest.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">वैद्य</p>
+        <h1>डॉ. राजेश्री</h1>
+        <p class="sub">Amilkanthwar Bompilwar<br />बीएएमएस · एमएस (जनरल सर्जरी)<br />गुदविकार, मूत्रविकार व आयुर्वेद तज्ञ</p>
+        <div class="lines">
+          <p>श्री युरोकेअर</p>
+          <p>सायकर सदन, भोई आळी</p>
+          <p>चापेकर चौक फ्लायओव्हर</p>
+          <p>चिंचवड गाव, पुणे ४११०३३</p>
+        </div>
+        <p class="foot" style="margin-top:auto">shreeurocare.in · +९१ ८७८८३ २९६४८</p>
+      </div>
+    </section>
+
+    <!-- 05 Find us -->
+    <section class="board sq" id="05-find-us">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">How to find us</p>
+        <h1>Chinchwad Gaon,<br />Pune.</h1>
+        <div class="lines">
+          <p>Saykar Sadan, Bhoi Ali</p>
+          <p>Chapekar Chowk Flyover</p>
+          <p>Near New English School</p>
+          <p>Pune 411033</p>
+        </div>
+        <p class="foot" style="margin-top:auto">Maps: Shree Urocare, Chinchwad Gaon<br />WhatsApp +91 87883 29648 for a pin</p>
+      </div>
+    </section>
+
+    <!-- 06 Hours -->
+    <section class="board sq" id="06-hours">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Clinic hours</p>
+        <h1>Monday to Saturday<br />10:00–20:00</h1>
+        <p class="sub">Closed Sunday. In-clinic consult ₹700. Video consult ₹1,200.</p>
+        <p class="foot" style="margin-top:auto">WhatsApp +91 87883 29648<br />Book at shreeurocare.in</p>
+        <p class="note">Pay at the clinic or UPI after you book. No fake online card charge.</p>
+      </div>
+    </section>
+
+    <!-- 07 Suvarnaprashan — no IQ / immunity-cure claims -->
+    <section class="board sq" id="07-suvarna">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Suvarnaprashan Sanskar</p>
+        <p class="hi">सुवर्णप्राशन संस्कार</p>
+        <h1>For children,<br />at the clinic.</h1>
+        <p class="sub">Ask Dr Rajeshree for the next date. This is a clinic sanskar, not a medicine advertisement.</p>
+        <p class="foot" style="margin-top:auto">Shree Urocare · Chinchwad Gaon<br />WhatsApp +91 87883 29648 · write “Suvarnaprashan”</p>
+      </div>
+    </section>
+
+    <!-- 08 Agnikarma mole — no guaranteed result -->
+    <section class="board sq" id="08-agnikarma">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Agnikarma</p>
+        <p class="hi">मोल / चामखीर</p>
+        <h1>In-clinic visit<br />with the doctor.</h1>
+        <p class="sub">Dr Rajeshree will examine first. No result is promised in this notice.</p>
+        <p class="foot" style="margin-top:auto">Shree Urocare · Chinchwad Gaon<br />WhatsApp +91 87883 29648 · write “Agnikarma”</p>
+      </div>
+    </section>
+
+    <!-- 09 Story EN -->
+    <section class="board story dark" id="09-story-en">
+      <div class="bg" style="background-image:url('textures/forest.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Shree Urocare</p>
+        <p class="hi">चिंचवड गाव, पुणे</p>
+        <h1>Consult with Dr Rajeshree.</h1>
+        <p class="sub">BAMS · MS (General Surgery)<br />In-clinic, 30 minutes, one time.</p>
+        <div class="fee"><strong>₹700</strong><span>clinic</span></div>
+        <p class="foot">+91 87883 29648<br />Mon–Sat 10:00–20:00<br />Near New English School, Chapekar Chowk Flyover</p>
+        <p class="note">A doctor visit. Not a product sale.</p>
+      </div>
+    </section>
+
+    <!-- 10 Story MR -->
+    <section class="board story" id="10-story-mr">
+      <div class="bg" style="background-image:url('textures/ivory.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">श्री युरोकेअर</p>
+        <p class="hi">चिंचवड गाव, पुणे</p>
+        <h1>डॉ. राजेश्री<br />क्लिनिक भेट ₹७००</h1>
+        <p class="sub">बीएएमएस · एमएस (जनरल सर्जरी)<br />३० मिनिटे. एकदाच.</p>
+        <p class="foot" style="margin-top:auto">व्हॉट्सअॅप +९१ ८७८८३ २९६४८<br />सोम–शनि सकाळी १० ते रात्री ८<br />न्यू इंग्लिश स्कूल जवळ, चापेकर चौक</p>
+        <p class="note">ही डॉक्टर भेट आहे.</p>
+      </div>
+    </section>
+
+    <!-- 11 WhatsApp status -->
+    <section class="board story dark" id="11-wa-status">
+      <div class="bg" style="background-image:url('textures/forest.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <p class="eyebrow">Shree Urocare</p>
+        <h1>डॉ. राजेश्री<br />₹700</h1>
+        <p class="sub">Chinchwad Gaon<br />WhatsApp 87883 29648</p>
+        <p class="foot" style="margin-top:auto">Mon–Sat 10:00–20:00</p>
+      </div>
+    </section>
+
+    <!-- 12 Facebook / IG cover -->
+    <section class="board wide dark" id="12-cover">
+      <div class="bg" style="background-image:url('textures/forest.jpg')"></div>
+      <div class="frame"></div>
+      <div class="inner">
+        <div class="stack">
+          <div>
+            <p class="eyebrow">Shree Urocare · Pune</p>
+            <h1>Dr Rajeshree Amilkanthwar Bompilwar</h1>
+            <p class="sub">BAMS · MS (General Surgery)</p>
+          </div>
+          <div>
+            <p class="hi">मूत्रविकार, गुदविकार, मुळव्याध, भगंदर तज्ञ</p>
+            <p class="foot" style="margin-top:auto">Chinchwad Gaon · +91 87883 29648 · ₹700 in-clinic</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
