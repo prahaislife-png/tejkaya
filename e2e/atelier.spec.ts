@@ -101,7 +101,7 @@ test("consult booking and clinic letterhead desk", async ({ page }) => {
   await page.goto("/consult.html");
   await expect(page.getByRole("heading", { name: "Consult with Dr Rajeshree." })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Video follow-up pack (3 visits)" })).toBeVisible();
-  await expect(page.getByText("₹3,000")).toBeVisible();
+  await expect(page.getByText("₹3,000").first()).toBeVisible();
   await expect(page.locator("#cal-embed")).toHaveAttribute("data-cal-link", /govin-floyd-6lk5bw\/video-30/);
   await page.getByRole("button", { name: /In-clinic visit/ }).click();
   await expect(page.locator("#cal-embed")).toHaveAttribute("data-cal-link", /govin-floyd-6lk5bw\/clinic-30/);
