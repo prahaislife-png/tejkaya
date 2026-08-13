@@ -849,27 +849,59 @@ body::before {
 
 /* Early access */
 .early-access {
-  padding: 6.5rem 0;
-  text-align: center;
-  background:
-    radial-gradient(ellipse at center, rgba(184, 149, 106, 0.12), transparent 60%),
-    var(--ivory);
+  padding: 0;
+  text-align: left;
+  background: var(--forest-deep);
+}
+
+.early-access-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: min(78vh, 820px);
+}
+
+.early-access-media {
+  min-height: 420px;
+  overflow: hidden;
+}
+
+.early-access-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.early-access-copy {
+  padding: clamp(2.5rem, 6vw, 5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--cream);
+}
+
+.early-access-copy .eyebrow {
+  color: var(--gold-bright);
+}
+
+.early-access-copy .lede,
+.early-access-copy h2 {
+  color: var(--ivory);
 }
 
 .early-access form {
   display: flex;
   gap: 0.6rem;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   margin-top: 1.8rem;
 }
 
 .early-access input[type="email"] {
-  min-width: min(100%, 320px);
+  min-width: min(100%, 280px);
   height: 3rem;
   padding: 0 1rem;
-  border: 1px solid var(--line);
-  background: #fff;
+  border: 1px solid rgba(184, 149, 106, 0.45);
+  background: rgba(255, 255, 255, 0.96);
   font-family: var(--sans);
   font-size: 0.95rem;
   color: var(--ink);
@@ -878,6 +910,25 @@ body::before {
 .early-access input:focus {
   outline: none;
   border-color: var(--gold);
+}
+
+.brand-plate-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 2.5rem;
+}
+
+.brand-plate {
+  width: min(240px, 58vw);
+  height: auto;
+  display: block;
+}
+
+.footer-plate {
+  width: 120px;
+  height: auto;
+  margin-bottom: 0.8rem;
+  display: block;
 }
 
 .thanks {
@@ -1184,7 +1235,8 @@ body::before {
   .split,
   .product-hero,
   .mosaic,
-  .ingredient-detail {
+  .ingredient-detail,
+  .early-access-grid {
     grid-template-columns: 1fr;
   }
 

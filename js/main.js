@@ -97,9 +97,9 @@
       '<footer class="site-footer">' +
       '<div class="footer-grid">' +
       '<div class="footer-brand">' +
-      logoSvg() +
-      "<strong>Tej Kaya</strong>" +
-      '<p class="devanagari">तेज काया</p>' +
+      '<img class="footer-plate" src="' +
+      p +
+      'assets/canva/logo.jpg" alt="Tej Kaya">' +
       "<p>Traditional Indian formulations, presented with the refinement of a modern luxury wellness house. Pre-launch. India.</p>" +
       "</div>" +
       '<div><p class="footer-label">The Collection</p><ul>' +
