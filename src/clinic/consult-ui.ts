@@ -38,16 +38,92 @@ function eventCopy(booking: Booking, sku: ConsultSku): { title: string; details:
   return { title, details, location };
 }
 
-function kolkataStamp(iso: string): { dateIso: string; time: string; start: Date; end: Date } {
+function kolkataStamp(iso: string): { dateIso: string; time: string } {
   const start = new Date(iso);
-  const dateIso = start.toLocaleDateString("en-CA", { timeZone: CLINIC.timezone });
-  const time = start.toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: CLINIC.timezone
-  });
-  return { dateIso, time, start, end: start };
+  return {
+    dateIso: start.toLocaleDateString("en-CA", { timeZone: CLINIC.timezone }),
+    time: start.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: CLINIC.timezone
+    })
+  };
+}
+
+function card(eyebrow: string, title: string, children: Array<Node | string>): HTMLElement {
+  const box = el("aside", { class: "consult-card" });
+  box.append(el("p", { class: "eyebrow" }, [eyebrow]), el("h2", {}, [title]), ...children);
+  return box;
+}
+
+function leftRail(sku: ConsultSku): HTMLElement {
+  const rail = el("div", { class: "consult-rail" });
+  rail.append(
+    card("Physician", CLINIC.doctor, [
+      el("p", { class: "consult-cred" }, [`${CLINIC.credentials}`]),
+      el("p", {}, [CLINIC.role]),
+      el("p", { class: "subtle consult-hi" }, [CLINIC.hindi]),
+      el("p", { class: "micro" }, ["Marathi · Hindi · English. 30 minutes. Letterhead plan after the visit, in her name."])
+    ]),
+    card("Fees", "Pay at clinic or UPI", [
+      el("ul", { class: "consult-fees" }, [
+        ...CONSULT_SKUS.map((s) => {
+          const li = el("li", { class: s.id === sku.id ? "is-on" : "" });
+          li.append(
+            el("span", {}, [s.title]),
+            el("strong", {}, [formatInr(s.priceInr)])
+          );
+          return li;
+        })
+      ]),
+      el("p", { class: "micro" }, [
+        "No card charge on this page. Confirm on WhatsApp. Pack: book the first slot now, the next two when you need them."
+      ])
+    ]),
+    card("This visit", sku.mode === "clinic" ? "In Chinchwad" : "On video", [
+      el("ul", { class: "consult-list" }, [
+        sku.mode === "clinic"
+          ? el("li", {}, ["Examination and procedures are in-clinic only."])
+          : el("li", {}, ["India-wide. Quiet room, camera on, reports as photos if you have them."]),
+        el("li", {}, ["Bring prior reports, a medicine list, and what you have already tried."]),
+        el("li", {}, ["Tej Kaya jars are not a substitute for this visit."])
+      ])
+    ])
+  );
+  return rail;
+}
+
+function rightRail(sku: ConsultSku): HTMLElement {
+  const rail = el("div", { class: "consult-rail" });
+  const tel = `tel:+${CLINIC.whatsapp}`;
+  const wa = whatsappHref(
+    `Namaste, I would like to book ${sku.title} with ${CLINIC.doctor}.`
+  );
+  rail.append(
+    card("Clinic", CLINIC.name, [
+      el("p", { class: "micro" }, [CLINIC.hours, " IST"]),
+      el("p", {}, [CLINIC.address]),
+      el("div", { class: "consult-links" }, [
+        el("a", { class: "text-link", href: CLINIC.maps, target: "_blank", rel: "noopener" }, ["Map"]),
+        el("a", { class: "text-link", href: tel }, ["Call"]),
+        el("a", { class: "text-link", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp"]),
+        el("a", { class: "text-link", href: CLINIC.site, target: "_blank", rel: "noopener" }, ["shreeurocare.in"])
+      ]),
+      el("p", { class: "micro" }, ["Landmark: Chapekar Chowk flyover, near New English School, Chinchwad Gaon."])
+    ]),
+    card("After you pick a time", "Three steps", [
+      el("ol", { class: "consult-list" }, [
+        el("li", {}, ["Cal.com emails the slot. Video link arrives there for remote visits."]),
+        el("li", {}, ["WhatsApp the clinic with your name and UPI screenshot, or pay at the desk."]),
+        el("li", {}, ["Arrive 10 minutes early in clinic. For video, join from the confirmation mail."])
+      ])
+    ]),
+    card("Note", "Not a Tej Kaya product", [
+      el("p", { class: "micro" }, [CLINIC_MEDICAL_NOTE])
+    ])
+  );
+  return rail;
 }
 
 export async function mountConsult(root: HTMLElement): Promise<void> {
@@ -69,7 +145,7 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     const name = firstName.trim() || attendee?.name || "Guest";
     const mail = email.trim().toLowerCase() || attendee?.email || "";
     if (phone.replace(/\D/g, "").length < 10) {
-      error = "Add a WhatsApp number above so the clinic can confirm, then book the time again if needed.";
+      error = "Add a WhatsApp number in the form so the clinic can confirm.";
       await paint();
       return;
     }
@@ -107,10 +183,32 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     await paint();
   }
 
+  function mast(): HTMLElement {
+    const bar = el("header", { class: "consult-mast" });
+    const copy = el("div");
+    copy.append(
+      el("p", { class: "eyebrow" }, ["Shree Urocare · Chinchwad, Pune"]),
+      el("h1", {}, ["Consult with Dr Rajeshree."])
+    );
+    const meta = el("div", { class: "consult-mast-meta" });
+    meta.append(
+      el("p", {}, [`${CLINIC.hours} · ${CLINIC.phoneDisplay}`]),
+      el("p", { class: "micro" }, ["Live calendar. Choose a visit, leave your WhatsApp, pick a time."])
+    );
+    bar.append(copy, meta);
+    return bar;
+  }
+
   async function paint(): Promise<void> {
     const sku = skuById(skuId) ?? CONSULT_SKUS[1];
     root.replaceChildren();
-    const wrap = el("div", { class: "app-shell" });
+    const page = el("div", { class: "consult-page" });
+    page.append(mast());
+
+    const board = el("div", { class: "consult-board" });
+    board.append(leftRail(sku));
+
+    const main = el("div", { class: "consult-main" });
 
     if (done && doneSku) {
       const copy = eventCopy(done, doneSku);
@@ -120,20 +218,26 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
       const wa = whatsappHref(
         `Namaste, I booked ${doneSku.title} with ${CLINIC.doctor} on ${done.dateIso} at ${done.time} via Cal.com. Name: ${done.firstName}. Phone: ${done.phone}. Reason: ${done.reason}. Fee ${formatInr(done.priceInr)}. I will confirm payment on WhatsApp / UPI.`
       );
-      wrap.innerHTML = `<p class="eyebrow">${CLINIC.name}</p>
-        <h1>Booked on Cal.com.</h1>
-        <p class="lede">WhatsApp the clinic to confirm payment. ${CLINIC.doctor} writes any plan or prescription in her name after the visit.</p>
-        <div class="panel">
-          <p><strong>${doneSku.title}</strong> · ${formatInr(done.priceInr)}</p>
-          <p>${done.dateIso} · ${done.time} · ${done.mode === "clinic" ? "Chinchwad clinic" : "Video"}</p>
-          ${done.videoCallUrl ? `<p class="micro">Video: ${done.videoCallUrl}</p>` : ""}
-          <p class="micro">Payment: unpaid until you send UPI on WhatsApp or pay at the clinic. We do not fake a successful Razorpay charge.</p>
-        </div>`;
+      const panel = el("div", { class: "consult-confirm" });
+      panel.append(
+        el("p", { class: "eyebrow" }, ["Cal.com"]),
+        el("h2", {}, ["Booked on Cal.com."]),
+        el("p", {}, [
+          `${doneSku.title} · ${formatInr(done.priceInr)} · ${done.dateIso} · ${done.time} · ${
+            done.mode === "clinic" ? "Chinchwad clinic" : "Video"
+          }`
+        ]),
+        el("p", { class: "micro" }, [
+          "Unpaid until UPI on WhatsApp or cash/UPI at the desk. This page does not fake a card success."
+        ])
+      );
       const actions = el("div", { class: "app-actions" });
       actions.append(el("a", { class: "btn btn-gold", href: wa, target: "_blank", rel: "noopener" }, ["WhatsApp confirm"]));
       actions.append(el("a", { class: "btn btn-solid", href: cal, target: "_blank", rel: "noopener" }, ["Google Calendar"]));
       if (done.videoCallUrl) {
-        actions.append(el("a", { class: "btn btn-ghost", href: done.videoCallUrl, target: "_blank", rel: "noopener" }, ["Join video"]));
+        actions.append(
+          el("a", { class: "btn btn-ghost", href: done.videoCallUrl, target: "_blank", rel: "noopener" }, ["Join video"])
+        );
       }
       const icsBtn = el("button", { class: "btn btn-ghost", type: "button" }, ["Download .ics"]);
       icsBtn.addEventListener("click", () => {
@@ -147,72 +251,41 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
           ])
         );
       }
-      wrap.append(actions);
-      wrap.append(
-        el("p", { class: "micro" }, [
-          `UPI ID (replace in config if needed): ${CLINIC.upiId}. Send the screenshot on WhatsApp.`
-        ])
-      );
-      wrap.append(el("p", { class: "disclaimer" }, [CLINIC_MEDICAL_NOTE]));
-      root.append(wrap);
+      panel.append(actions);
+      panel.append(el("p", { class: "micro" }, [`UPI: ${CLINIC.upiId}. Send the screenshot on WhatsApp.`]));
+      main.append(panel);
+      board.append(main, rightRail(doneSku));
+      page.append(board);
+      root.append(page);
       return;
     }
 
-    wrap.append(
-      el("p", { class: "eyebrow" }, ["Physician · Shree Urocare"]),
-      el("h1", {}, ["Consult with Dr Rajeshree."]),
-      el("p", { class: "lede app-kicker" }, [
-        `${CLINIC.credentials}. ${CLINIC.role}, ${CLINIC.city}. Times are live from Cal.com — Mon–Sat, 10:00–20:00 IST.`
-      ]),
-      el("p", { class: "subtle" }, [CLINIC.hindi])
-    );
-
-    const meta = el("div", { class: "score-grid" });
-    meta.style.gridTemplateColumns = "repeat(3, 1fr)";
-    for (const [k, v] of [
-      ["Clinic", CLINIC.hours],
-      ["Phone", CLINIC.phoneDisplay],
-      ["Address", CLINIC.address]
-    ] as const) {
-      const cell = el("div", { class: "score-cell" });
-      cell.append(el("span", { class: "eyebrow" }, [k]), el("p", {}, [v]));
-      meta.append(cell);
-    }
-    wrap.append(meta);
-
-    wrap.append(el("h2", {}, ["Choose a visit"]));
-    const packs = el("div", { class: "studio-grid" });
+    const skus = el("div", { class: "consult-skus" });
     for (const s of CONSULT_SKUS) {
-      const card = el("button", {
-        class: `studio-card sku-card ${s.id === sku.id ? "is-on" : ""}`,
+      const tab = el("button", {
+        class: `sku-tab ${s.id === sku.id ? "is-on" : ""}`,
         type: "button"
       });
-      card.append(el("p", { class: "eyebrow" }, [s.mode === "clinic" ? "Pune clinic" : "India-wide video"]));
-      card.append(el("h3", {}, [s.title]));
-      card.append(el("p", { class: "price-lg" }, [formatInr(s.priceInr)]));
-      card.append(el("p", {}, [s.blurb]));
-      if (s.visits > 1) {
-        card.append(
-          el("p", { class: "micro" }, [
-            `${s.visits} visits · ${formatInr(Math.round(s.priceInr / s.visits))} each · book follow-ups on the same calendar`
-          ])
-        );
-      }
-      card.addEventListener("click", () => {
+      tab.append(
+        el("p", { class: "eyebrow" }, [s.mode === "clinic" ? "Pune clinic" : "India-wide video"]),
+        el("h3", {}, [s.title]),
+        el("p", { class: "price-lg" }, [formatInr(s.priceInr)])
+      );
+      tab.addEventListener("click", () => {
         skuId = s.id;
         void paint();
       });
-      packs.append(card);
+      skus.append(tab);
     }
-    wrap.append(packs);
+    main.append(skus);
 
-    const form = el("form", { class: "panel field-grid", style: "margin-top:1.6rem" });
+    const form = el("form", { class: "consult-form field-grid" });
     form.innerHTML = `
       <div class="field"><label for="fn">First name</label><input id="fn" required autocomplete="given-name" /></div>
-      <div class="field"><label for="ph">WhatsApp number</label><input id="ph" required inputmode="tel" autocomplete="tel" placeholder="10-digit mobile" /></div>
-      <div class="field field-wide"><label for="em">Email</label><input id="em" type="email" required autocomplete="email" /></div>
-      <div class="field field-wide"><label for="reason">Reason for visit</label><select id="reason"></select></div>
-      <div class="field field-wide"><label for="notes">Notes for the doctor (optional)</label><textarea id="notes"></textarea></div>`;
+      <div class="field"><label for="ph">WhatsApp</label><input id="ph" required inputmode="tel" autocomplete="tel" placeholder="10-digit mobile" /></div>
+      <div class="field"><label for="em">Email</label><input id="em" type="email" required autocomplete="email" /></div>
+      <div class="field"><label for="reason">Reason</label><select id="reason"></select></div>
+      <div class="field field-notes"><label for="notes">Notes for the doctor</label><textarea id="notes" placeholder="Optional"></textarea></div>`;
     const fn = form.querySelector("#fn") as HTMLInputElement;
     const ph = form.querySelector("#ph") as HTMLInputElement;
     const em = form.querySelector("#em") as HTMLInputElement;
@@ -232,34 +305,33 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     notesEl.addEventListener("input", () => (notes = notesEl.value));
     reasonEl.addEventListener("change", () => (reason = reasonEl.value));
     if (error) form.append(el("p", { class: "err field-wide" }, [error]));
-    form.append(
-      el("p", { class: "micro field-wide" }, [
-        "Pick a time in the Cal.com calendar below. Fees are paid by UPI or at the clinic — this page does not take card payment and will not show a fake success."
-      ])
-    );
-    wrap.append(form);
+    main.append(form);
 
-    const calPanel = el("div", { class: "panel", style: "margin-top:1.2rem" });
+    const calPanel = el("div", { class: "consult-cal" });
     calPanel.append(
-      el("p", { class: "eyebrow" }, ["Cal.com"]),
-      el("h2", {}, [sku.mode === "clinic" ? "In-clinic times" : "Video times"]),
-      el("p", { class: "micro" }, [
-        sku.visits > 1
-          ? "This pack is three video visits. Book the first slot now; book the next two when you need them. Confirm the pack fee on WhatsApp."
-          : `Live availability for ${sku.title}.`
+      el("div", { class: "consult-cal-head" }, [
+        el("div", {}, [
+          el("p", { class: "eyebrow" }, ["Cal.com"]),
+          el("h2", {}, [sku.title]),
+          el("p", { class: "micro" }, [
+            sku.visits > 1
+              ? "Three video visits. Book the first time here; book follow-ups on the same calendar."
+              : sku.blurb
+          ])
+        ]),
+        el("a", { class: "text-link", href: calBookingUrl(sku.id), target: "_blank", rel: "noopener" }, [
+          "Open this calendar on Cal.com"
+        ])
       ])
     );
     const calBox = el("div", { id: "cal-embed", class: "cal-embed" });
     calBox.setAttribute("data-cal-link", calLinkForSku(sku.id));
     calPanel.append(calBox);
-    calPanel.append(
-      el("p", { class: "micro" }, [
-        el("a", { href: calBookingUrl(sku.id), target: "_blank", rel: "noopener" }, ["Open this calendar on Cal.com"])
-      ])
-    );
-    wrap.append(calPanel);
-    wrap.append(el("p", { class: "disclaimer" }, [CLINIC_MEDICAL_NOTE]));
-    root.append(wrap);
+    main.append(calPanel);
+
+    board.append(main, rightRail(sku));
+    page.append(board);
+    root.append(page);
 
     const reasonLabel = VISIT_REASONS.find((r) => r.id === reason)?.label ?? reason;
     const prefillNotes = [
@@ -270,10 +342,9 @@ export async function mountConsult(root: HTMLElement): Promise<void> {
     ]
       .filter(Boolean)
       .join("\n");
-    const ns = sku.mode === "clinic" ? "clinic" : "video";
     mountCalInline({
       el: calBox,
-      namespace: ns,
+      namespace: sku.mode === "clinic" ? "clinic" : "video",
       calLink: calLinkForSku(sku.id),
       name: firstName,
       email,

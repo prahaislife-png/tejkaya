@@ -315,3 +315,230 @@
     grid-template-columns: 1fr;
   }
 }
+
+.consult-page {
+  width: min(1480px, calc(100% - 2 * var(--gutter)));
+  margin: 0 auto;
+  padding: 1.15rem 0 2.8rem;
+}
+
+.consult-mast {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.consult-mast h1 {
+  margin: 0;
+  font-size: clamp(1.85rem, 2.8vw, 2.55rem);
+}
+
+.consult-mast-meta {
+  max-width: 22rem;
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.consult-board {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr) minmax(220px, 260px);
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.consult-rail {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.consult-rail,
+.consult-main {
+  min-width: 0;
+}
+
+@media (min-width: 1100px) {
+  .consult-rail {
+    position: sticky;
+    top: calc(var(--header) + 0.65rem);
+  }
+}
+
+.consult-card {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  padding: 0.85rem 0.95rem 0.95rem;
+}
+
+.consult-card h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.4rem;
+}
+
+.consult-cred {
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.35rem;
+}
+
+.consult-hi {
+  font-family: var(--dev);
+  font-size: 0.95rem;
+}
+
+.consult-fees {
+  list-style: none;
+  margin: 0 0 0.55rem;
+  padding: 0;
+}
+
+.consult-fees li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.84rem;
+}
+
+.consult-fees li.is-on strong {
+  color: var(--gold-dim);
+}
+
+.consult-list {
+  margin: 0;
+  padding-left: 1.05rem;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+}
+
+.consult-list li {
+  margin: 0.28rem 0;
+}
+
+.consult-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.9rem;
+  margin: 0.55rem 0;
+  font-size: var(--fs-nav);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.consult-skus {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.sku-tab {
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  min-height: 0;
+  padding: 0.7rem 0.8rem;
+  background: var(--cream);
+  border: 1px solid var(--line);
+}
+
+.sku-tab h3 {
+  font-size: 1.05rem;
+  margin: 0.1rem 0 0;
+}
+
+.sku-tab .price-lg {
+  font-size: 1.15rem;
+  margin: 0.15rem 0 0;
+}
+
+.sku-tab.is-on {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px var(--gold);
+  background: var(--ivory);
+}
+
+.consult-form.field-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem 0.75rem;
+  padding: 0.85rem 0.95rem;
+  margin: 0 0 0.7rem;
+}
+
+.consult-form .field-notes {
+  grid-column: 1 / -1;
+}
+
+.consult-form .field input,
+.consult-form .field select,
+.consult-form .field textarea {
+  padding: 0.48rem 0.65rem;
+}
+
+.consult-form .field textarea {
+  min-height: 3.2rem;
+}
+
+.consult-cal {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  padding: 0.75rem 0.85rem 0.9rem;
+}
+
+.consult-cal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 0.45rem;
+}
+
+.consult-cal-head h2 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.consult-page .cal-embed {
+  min-height: 540px;
+  margin-top: 0.45rem;
+}
+
+.consult-confirm {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  padding: 1.2rem 1.3rem;
+}
+
+@media (max-width: 1099px) {
+  .consult-board {
+    grid-template-columns: 1fr 1fr;
+  }
+  .consult-main {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+  .consult-mast-meta {
+    text-align: left;
+  }
+}
+
+@media (max-width: 720px) {
+  .consult-board,
+  .consult-skus,
+  .consult-form.field-grid {
+    grid-template-columns: 1fr;
+  }
+  .consult-mast {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
