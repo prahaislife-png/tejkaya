@@ -120,7 +120,7 @@ test("consult booking and clinic letterhead desk", async ({ page }) => {
   await page.locator("#pin").fill("urocare");
   await page.getByRole("button", { name: "Enter" }).click();
   await expect(page.getByRole("heading", { name: "Today’s book." })).toBeVisible();
-  await expect(page.getByText("Anika")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Anika" })).toBeVisible();
   await page.getByRole("button", { name: "Open" }).first().click();
   await page.locator("textarea").nth(1).fill("Sitz bath. Review in 7 days.");
   await page.getByRole("button", { name: "Save letterhead" }).click();
