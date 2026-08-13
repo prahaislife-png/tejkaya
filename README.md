@@ -30,7 +30,7 @@ No paid Figma file is required. The house identity lives in the repo:
 - Type: [Google Fonts](https://fonts.google.com/) — Cormorant Garamond, Outfit, Noto Serif Devanagari (SIL Open Font License), self-hosted in `assets/fonts/`
 - Mark: `assets/mark.svg` and Canva lockup `assets/canva/logo.jpg`
 - Early-access poster: `assets/canva/early-access-poster.jpg` (from Canva)
-- Product labels: HTML overlays (`.pack-label`) — Canva Free could not export PNG labels
+- Product shots: studio cutouts with printed lockups (`tools/brand-cutouts.py`)
 - Rules for later edits: `.cursor/skills/tej-kaya/SKILL.md`
 
 ## Local preview

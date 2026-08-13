@@ -22,7 +22,6 @@ window.TEJ_KAYA.products = [
     weight: "500 g",
     priceNote: "Price on launch",
     image: "assets/images/product-chyawanprash.jpg",
-    label: { top: "44%", left: "50%", width: "34%", height: "32%", shape: "rect" },
     accent: "#b8956a",
     tagline: "The morning spoon. Recast for the contemporary table.",
     excerpt:
@@ -52,7 +51,6 @@ window.TEJ_KAYA.products = [
     weight: "60 capsules",
     priceNote: "Price on launch",
     image: "assets/images/product-urinary.jpg",
-    label: { top: "48%", left: "50%", width: "30%", height: "24%", shape: "rect" },
     accent: "#c4a484",
     tagline: "A composed companion for everyday urinary comfort.",
     excerpt:
@@ -82,7 +80,6 @@ window.TEJ_KAYA.products = [
     weight: "60 capsules",
     priceNote: "Price on launch",
     image: "assets/images/product-prostate.jpg",
-    label: { top: "50%", left: "46%", width: "26%", height: "30%", shape: "rect" },
     accent: "#8a6a48",
     tagline: "Men's wellness, without the clinic aesthetic.",
     excerpt:
@@ -112,7 +109,6 @@ window.TEJ_KAYA.products = [
     weight: "60 capsules",
     priceNote: "Price on launch",
     image: "assets/images/product-piles.jpg",
-    label: { top: "49%", left: "48%", width: "32%", height: "32%", shape: "oval" },
     accent: "#7a3a3a",
     tagline: "Discretion, dignity, and a beautiful vessel.",
     excerpt:
@@ -142,7 +138,6 @@ window.TEJ_KAYA.products = [
     weight: "200 g",
     priceNote: "Price on launch",
     image: "assets/images/product-fibre.jpg",
-    label: { top: "46%", left: "30%", width: "32%", height: "36%", shape: "rect" },
     accent: "#c9b896",
     tagline: "Isabgol, composed as a daily luxury of regularity.",
     excerpt:

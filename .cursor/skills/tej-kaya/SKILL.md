@@ -29,22 +29,16 @@ Fonts are self-hosted in `assets/fonts` via `css/fonts.css` (Google Fonts, SIL O
 
 One page gutter: `--page` (1200px). Header, hero, and collection share it.
 
-## Product labels
+## Product photography
 
-Never paint text into JPEGs. Photos stay unbranded. Overlay `.pack-label` (HTML) using `product.label` in `js/products.js`:
-
-```
-label: { top, left, width, height, shape: "rect" | "oval" }
-```
-
-`top`/`left` are the centre of the cream panel. Tune in the browser at 1440px. Type inside labels uses `cqh` so it scales with the label.
+Launch products use front-facing studio cutouts (`assets/images/product-*.jpg`). Lockups are printed onto the vessel’s cream panel with `tools/brand-cutouts.py` (not HTML overlays). Blank cutouts live in `assets/images/cutouts/`. Do not stack a second cream sticker on top of the photo’s existing label.
 
 ## Visual QA (required before shipping UI)
 
 Playwright, 1440×900 and 390×844: homepage hero, collection cards, one product page. Check:
 
 1. Headline lines up with “The Collection”
-2. Labels sit on the cream panels, not on the lid or the table
+2. All five products are studio cutouts with Tej Kaya lockups sitting inside the gold-bordered panels
 3. Nav is readable (~13px), H1 is not wrapping into five lines
 
 ## Adding a product
