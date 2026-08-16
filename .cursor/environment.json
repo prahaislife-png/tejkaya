@@ -1,0 +1,11 @@
+{
+  "name": "Tej Kaya",
+  "install": ".cursor/install.sh",
+  "terminals": [
+    {
+      "name": "vite",
+      "command": "npm run dev"
+    }
+  ],
+  "ports": [5173]
+}
